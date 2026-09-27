@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <title>Classement des candidats</title>
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #dbeafe;
+            --primary-soft: #eff6ff;
+            --primary-dark: #1e40af;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --success-dark: #16a34a;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --warning-dark: #92400e;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --danger-dark: #b91c1c;
+            --neutral: #64748b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --border: #e2e8f0;
+            --header-bg: #1e293b;
+            --radius: 12px;
+            --radius-lg: 18px;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 14px 30px rgba(37, 99, 235, 0.12);
+            --fs-xs: 0.72rem;
+            --fs-sm: 0.8rem;
+            --fs-md: 0.9rem;
+            --fs-lg: 1rem;
+            --fs-xl: 1.4rem;
+            --fs-2xl: 1.7rem;
+            --fs-3xl: 2.2rem;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .container {
+            width: min(1250px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 40px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            padding: 28px 30px 22px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.8rem, 2vw, 2.6rem);
+            letter-spacing: -0.04em;
+            line-height: 1.15;
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: var(--fs-lg);
+            font-weight: 500;
+        }
+
+        .job-title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid rgba(37, 99, 235, 0.12);
+            color: var(--primary-dark);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .job-title-badge i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: var(--fs-md);
+            font-weight: 700;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            line-height: 1;
+            white-space: nowrap;
+            letter-spacing: 0.01em;
+        }
+
+        .btn i {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.1;
+            flex-shrink: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .btn-analyser {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 10px 18px rgba(34, 197, 94, 0.22);
+        }
+
+        .btn-analyser:disabled {
+            background: #a1a1aa;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 10px 18px rgba(37, 99, 235, 0.18);
+        }
+
+        .btn-secondary,
+        .btn-retour {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 18px 0 26px;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            box-shadow: var(--shadow-sm);
+            min-height: 112px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .summary-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: var(--primary-soft);
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .summary-card:nth-child(2) .summary-icon {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+
+        .summary-card:nth-child(3) .summary-icon {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+        }
+
+        .summary-card:nth-child(4) .summary-icon {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .summary-meta {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .summary-label {
+            font-size: var(--fs-xs);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .summary-value {
+            font-size: clamp(var(--fs-xl), 1.8vw, 2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .summary-text {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .candidate-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border-radius: 20px;
+            padding: 24px 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 12px 24px rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .identity {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .position {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: var(--primary-dark);
+            font-weight: 800;
+            font-size: 1.08rem;
+            box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+            flex-shrink: 0;
+        }
+
+        .position.gold {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+        }
+
+        .position.silver {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #334155;
+        }
+
+        .position.bronze {
+            background: linear-gradient(135deg, #fde68a 0%, #fbbf24 100%);
+            color: #78350f;
+        }
+
+        .name {
+            font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            word-break: break-word;
+            color: var(--text);
+        }
+
+        .email {
+            color: var(--text-secondary);
+            font-size: var(--fs-md);
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .score-block {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        .score-ring {
+            --score: 0;
+            --score-color: var(--primary);
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(var(--score-color) calc(var(--score) * 1%), rgba(37, 99, 235, 0.12) 0);
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
+        }
+
+        .score-ring::before {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .score-ring-value {
+            position: relative;
+            z-index: 1;
+            font-size: 0.96rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .score-content {
+            text-align: right;
+        }
+
+        .match-score {
+            font-size: clamp(1.8rem, 2vw, 2.25rem);
+            font-weight: 800;
+            line-height: 1;
+            color: var(--text);
+        }
+
+        .match-label {
+            margin-top: 6px;
+            font-size: var(--fs-xs);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .score-bar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .score-metric {
+            background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 12px 10px;
+        }
+
+        .metric-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .metric-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(148, 163, 184, 0.18);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .metric-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--primary) 0%, #60a5fa 100%);
+        }
+
+        .metric-value {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 10px;
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .section-title i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: var(--fs-sm);
+            font-weight: 700;
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid rgba(2, 132, 199, 0.12);
+        }
+
+        .tag i {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+        }
+
+        .tag.missing {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: rgba(220, 38, 38, 0.12);
+        }
+
+        .empty-state {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: var(--text-secondary);
+            border: 1px dashed var(--border);
+            font-size: var(--fs-sm);
+            font-weight: 600;
+        }
+
+        .analysis-panel {
+            margin-top: 18px;
+            padding: 18px 18px 16px;
+            border-radius: 16px;
+            background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 1px solid rgba(34, 197, 94, 0.18);
+            border-left: 4px solid var(--success);
+            display: none;
+        }
+
+        .analysis-header span {
+            font-size: var(--fs-xs);
+        }
+
+        .analysis-panel.visible {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--success-dark);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+        }
+
+        .analysis-text {
+            line-height: 1.7;
+            color: var(--text);
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 0;
+            font-size: var(--fs-md);
+        }
+
+        .candidate-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-small i {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.2;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 2000;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .modal-panel {
+            width: min(820px, 100%);
+            max-height: 88vh;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+            animation: fadeIn 0.22s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        .modal-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.02rem;
+            color: var(--text);
+        }
+
+        .modal-header-title i {
+            width: 18px;
+            height: 18px;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #f8fafc;
+            color: var(--text);
+        }
+
+        .modal-close i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal-body {
+            max-height: calc(88vh - 78px);
+            overflow-y: auto;
+            padding: 22px 24px 24px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        .explanation-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
+            border: 1px solid rgba(37, 99, 235, 0.12);
+            margin-bottom: 20px;
+        }
+
+        .explanation-summary strong {
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .explanation-summary small {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .match-level-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            padding: 9px 12px;
+            white-space: nowrap;
+        }
+
+        .match-level-badge.high {
+            background: #dcfce7;
+            color: var(--success-dark);
+            border: 1px solid rgba(34, 197, 94, 0.18);
+        }
+
+        .match-level-badge.medium {
+            background: #fef3c7;
+            color: var(--warning-dark);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .match-level-badge.low {
+            background: #fee2e2;
+            color: var(--danger-dark);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .explanation-section {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .explanation-section h3 {
+            margin: 0 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.84rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .explanation-section h3 i {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+        }
+
+        .score-details {
+            display: grid;
+            gap: 14px;
+        }
+
+        .score-row {
+            display: grid;
+            gap: 7px;
+        }
+
+        .score-row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .score-row-header strong {
+            font-size: 0.82rem;
+            color: var(--text);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(148, 163, 184, 0.18);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--primary) 0%, #60a5fa 100%);
+        }
+
+        .progress-fill.success {
+            background: linear-gradient(90deg, #16a34a 0%, #4ade80 100%);
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+        }
+
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+        }
+
+        .skills-list,
+        .bullet-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .skill-chip,
+        .mini-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .skill-chip i,
+        .mini-badge i {
+            width: 13px;
+            height: 13px;
+        }
+
+        .skill-chip.good {
+            background: #ecfdf5;
+            border-color: rgba(34, 197, 94, 0.18);
+            color: var(--success-dark);
+        }
+
+        .skill-chip.bad {
+            background: #fef2f2;
+            border-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger-dark);
+        }
+
+        .analysis-text {
+            margin: 0;
+            line-height: 1.75;
+            color: var(--text);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .empty-message {
+            margin: 0;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .modal-overlay {
+                padding: 12px;
+            }
+
+            .modal-panel {
+                width: 100%;
+                max-height: 90vh;
+                border-radius: 18px;
+            }
+
+            .modal-header,
+            .modal-body {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .explanation-summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .chargement {
+            text-align: center;
+            padding: 56px 32px;
+            color: var(--text-secondary);
+            font-size: 1.04rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+        }
+
+        .erreur {
+            background: linear-gradient(135deg, #fff1f2 0%, #fee2e2 100%);
+            color: var(--danger-dark);
+            padding: 22px 20px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            font-weight: 600;
+        }
+
+        .succes {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            color: var(--success-dark);
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: none;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            font-weight: 600;
+        }
+
+        .info-analyse {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: var(--primary-dark);
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: none;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 980px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .score-bar-grid {
+                grid-template-columns: repeat(2, minmax(120px, 1fr));
+            }
+
+            .candidate-header {
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .score-block {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .score-content {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                width: min(100% - 20px, 1250px);
+            }
+
+            .header {
+                padding: 22px 18px 18px;
+            }
+
+            .summary-grid,
+            .score-bar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .candidate-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+
+            .btn,
+            .btn-small {
+                width: 100%;
+            }
+
+            .candidate-actions {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>
+            Classement des candidats
+        </h1>
+
+        <div id="job-title-badge" class="job-title-badge" aria-live="polite">
+            <i data-lucide="briefcase"></i>
+            <span>Chargement du poste...</span>
+        </div>
+
+        <p id="offre-info">
+            Chargement de l'offre...
+        </p>
+
+
+        <div class="header-actions">
+
+            <button
+                id="btn-analyser"
+                class="btn btn-analyser"
+                onclick="lancerAnalyse()"
+            >
+                <i data-lucide="sparkles"></i>
+                <span>Lancer l'analyse IA</span>
+            </button>
+
+            <button
+                class="btn btn-retour"
+                onclick="retour()"
+            >
+                <i data-lucide="arrow-left"></i>
+                <span>Retour</span>
+            </button>
+
+        </div>
+
+        <div id="summary-grid" class="summary-grid"></div>
+
+        <div
+            id="info-analyse"
+            class="info-analyse"
+        >
+            Analyse des candidats en cours...
+        </div>
+
+
+        <div
+            id="succes"
+            class="succes"
+        >
+        </div>
+
+    </div>
+
+
+    <div id="resultats">
+
+        <div class="chargement">
+            Chargement des candidats...
+        </div>
+
+    </div>
+
+</div>
+
+<div id="score-explanation-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="matching-explication-title">
+        <div class="modal-header">
+            <div class="modal-header-title">
+                <i data-lucide="brain"></i>
+                <span id="matching-explication-title">Explication du matching</span>
+            </div>
+            <button type="button" class="modal-close" data-close-modal title="Fermer la fenêtre" aria-label="Fermer la fenêtre">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="matching-explanation-content"></div>
+    </div>
+</div>
+
+
+<script>
+
+const offreId = {{ offre_id }};
+
+function parseList(value) {
+    if (!value) return [];
+    if (Array.isArray(value)) return value.map(item => String(item).trim()).filter(Boolean);
+
+    return String(value)
+        .split(",")
+        .map(item => item.trim())
+        .filter(item => item !== "");
+}
+
+function parseDetails(value) {
+    if (!value) return {};
+
+    if (typeof value === "object") {
+        return value;
+    }
+
+    if (typeof value === "string") {
+        try {
+            const parsed = JSON.parse(value);
+            return parsed && typeof parsed === "object" ? parsed : {};
+        } catch (error) {
+            return {};
+        }
+    }
+
+    return {};
+}
+
+function getScoreColor(score) {
+    if (score >= 80) return "#22c55e";
+    if (score >= 60) return "#f59e0b";
+    return "#ef4444";
+}
+
+function getPositionClass(index) {
+    if (index === 0) return "gold";
+    if (index === 1) return "silver";
+    if (index === 2) return "bronze";
+    return "";
+}
+
+function renderSummary(classement) {
+    const summaryGrid = document.getElementById("summary-grid");
+    if (!summaryGrid) return;
+
+    if (!classement || classement.length === 0) {
+        summaryGrid.innerHTML = `
+            <div class="summary-card">
+                <div class="summary-icon"><i data-lucide="users"></i></div>
+                <div class="summary-meta">
+                    <span class="summary-label">Candidats analysés</span>
+                    <span class="summary-value">0</span>
+                    <span class="summary-text">Aucun candidat</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon"><i data-lucide="chart-no-axes-column"></i></div>
+                <div class="summary-meta">
+                    <span class="summary-label">Score moyen</span>
+                    <span class="summary-value">0%</span>
+                    <span class="summary-text">À venir</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon"><i data-lucide="trophy"></i></div>
+                <div class="summary-meta">
+                    <span class="summary-label">Meilleur score</span>
+                    <span class="summary-value">0%</span>
+                    <span class="summary-text">À venir</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon"><i data-lucide="briefcase"></i></div>
+                <div class="summary-meta">
+                    <span class="summary-label">Compétences clés</span>
+                    <span class="summary-value">—</span>
+                    <span class="summary-text">Aucune donnée</span>
+                </div>
+            </div>
+        `;
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+        return;
+    }
+
+    const scores = classement
+        .map(item => Number(item.score ?? 0))
+        .filter(value => Number.isFinite(value));
+
+    const moyenne = scores.length ? Math.round(scores.reduce((sum, value) => sum + value, 0) / scores.length) : 0;
+    const meilleur = scores.length ? Math.max(...scores) : 0;
+
+    const skillMap = {};
+    classement.forEach(item => {
+        parseList(item.competences_correspondantes).forEach(skill => {
+            skillMap[skill] = (skillMap[skill] || 0) + 1;
+        });
+    });
+
+    const topSkills = Object.entries(skillMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([skill]) => skill)
+        .join(", ") || "—";
+
+    summaryGrid.innerHTML = `
+        <div class="summary-card">
+            <div class="summary-icon"><i data-lucide="users"></i></div>
+            <div class="summary-meta">
+                <span class="summary-label">Candidats analysés</span>
+                <span class="summary-value">${classement.length}</span>
+                <span class="summary-text">Total enregistrés</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i data-lucide="chart-no-axes-column"></i></div>
+            <div class="summary-meta">
+                <span class="summary-label">Score moyen</span>
+                <span class="summary-value">${moyenne}%</span>
+                <span class="summary-text">Moyenne globale</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i data-lucide="trophy"></i></div>
+            <div class="summary-meta">
+                <span class="summary-label">Meilleur score</span>
+                <span class="summary-value">${meilleur}%</span>
+                <span class="summary-text">Top performance</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i data-lucide="briefcase"></i></div>
+            <div class="summary-meta">
+                <span class="summary-label">Compétences clés</span>
+                <span class="summary-value">${topSkills.length > 20 ? topSkills.substring(0, 20) + '…' : topSkills}</span>
+                <span class="summary-text">Les plus demandées</span>
+            </div>
+        </div>
+    `;
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+
+function createSkillBadge(label, missing = false) {
+    const icon = missing ? "x" : "check";
+    return `
+        <span class="tag ${missing ? "missing" : ""}">
+            <i data-lucide="${icon}"></i>
+            <span>${label}</span>
+        </span>
+    `;
+}
+
+function createMetric(label, value) {
+    const numericValue = Number(value ?? 0);
+    const boundedValue = Math.max(0, Math.min(100, numericValue));
+    return `
+        <div class="score-metric">
+            <div class="metric-top">
+                <span>${label}</span>
+                <span class="metric-value">${boundedValue}%</span>
+            </div>
+            <div class="metric-bar">
+                <div class="metric-fill" style="width: ${boundedValue}%"></div>
+            </div>
+        </div>
+    `;
+}
+
+function clampPercentage(value) {
+    const numericValue = Number(value ?? 0);
+    if (!Number.isFinite(numericValue)) {
+        return 0;
+    }
+    return Math.max(0, Math.min(100, numericValue));
+}
+
+function safeText(value, fallback = "Aucune donnée disponible.") {
+    if (value === null || value === undefined) {
+        return fallback;
+    }
+
+    if (typeof value === "number") {
+        return Number.isFinite(value) ? String(value) : fallback;
+    }
+
+    if (Array.isArray(value)) {
+        return value.length ? value.map(item => String(item).trim()).filter(Boolean).join(", ") : fallback;
+    }
+
+    const text = String(value).trim();
+    return text || fallback;
+}
+
+function getMatchingLevel(score) {
+    if (score >= 80) {
+        return { label: "Forte correspondance", className: "high" };
+    }
+    if (score >= 50) {
+        return { label: "Correspondance partielle", className: "medium" };
+    }
+    return { label: "Correspondance limitée", className: "low" };
+}
+
+function buildProgressRow(label, value) {
+    const percentage = clampPercentage(value);
+    let tone = "primary";
+
+    if (percentage >= 80) {
+        tone = "success";
+    } else if (percentage >= 50) {
+        tone = "warning";
+    } else {
+        tone = "danger";
+    }
+
+    return `
+        <div class="score-row">
+            <div class="score-row-header">
+                <span>${label}</span>
+                <strong>${percentage}%</strong>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill ${tone}" style="width: ${percentage}%"></div>
+            </div>
+        </div>
+    `;
+}
+
+function buildExplanationContent(candidat) {
+    const details = parseDetails(candidat.details_matching || candidat.details || {});
+    const score = clampPercentage(Number(candidat.score ?? 0));
+    const matchingLevel = getMatchingLevel(score);
+    const competences = parseList(candidat.competences_correspondantes);
+    const manquantes = parseList(candidat.competences_manquantes);
+    const analysisText = safeText(candidat.analyse_ia || candidat.analyse, "Aucune explication détaillée n'a été générée.");
+
+    const detailsRows = [
+        buildProgressRow("Compétences", details.competences ?? 0),
+        buildProgressRow("Expérience", details.experience ?? 0),
+        buildProgressRow("Formation", details.formation ?? 0),
+        buildProgressRow("Langues", details.langues ?? 0)
+    ].join("");
+
+    const pointsForts = [];
+    if (competences.length) {
+        pointsForts.push(`Compétences alignées avec l'offre : ${competences.join(", ")}`);
+    }
+    if (Number(details.experience ?? 0) >= 60) {
+        pointsForts.push("Expérience pertinente pour le poste.");
+    }
+    if (Number(details.formation ?? 0) >= 60) {
+        pointsForts.push("Formation compatible avec les exigences de l'offre.");
+    }
+    if (Number(details.langues ?? 0) >= 60) {
+        pointsForts.push("Niveau de langues conforme aux attentes.");
+    }
+
+    const pointsAmeliorer = [];
+    if (manquantes.length) {
+        pointsAmeliorer.push(`Compétences manquantes : ${manquantes.join(", ")}`);
+    }
+    const criteresFaibles = [
+        ["Compétences", Number(details.competences ?? 0)],
+        ["Expérience", Number(details.experience ?? 0)],
+        ["Formation", Number(details.formation ?? 0)],
+        ["Langues", Number(details.langues ?? 0)]
+    ].filter(([, value]) => Number(value) < 60)
+     .map(([label, value]) => `${label} : ${clampPercentage(value)}%`);
+
+    if (criteresFaibles.length) {
+        pointsAmeliorer.push(...criteresFaibles);
+    }
+
+    if (!pointsAmeliorer.length) {
+        pointsAmeliorer.push("Aucune donnée disponible.");
+    }
+
+    const pointsFortsHtml = pointsForts.length
+        ? `<ul class="bullet-list">${pointsForts.map(item => `<li class="mini-badge"><i data-lucide="check"></i><span>${item}</span></li>`).join("")}</ul>`
+        : `<p class="empty-message">Aucune donnée disponible.</p>`;
+
+    const pointsAmeliorerHtml = pointsAmeliorer.length
+        ? `<ul class="bullet-list">${pointsAmeliorer.map(item => `<li class="mini-badge"><i data-lucide="circle-alert"></i><span>${item}</span></li>`).join("")}</ul>`
+        : `<p class="empty-message">Aucune donnée disponible.</p>`;
+
+    const competencesHtml = competences.length
+        ? `<ul class="skills-list">${competences.map(item => `<li class="skill-chip good"><i data-lucide="check"></i><span>${item}</span></li>`).join("")}</ul>`
+        : `<p class="empty-message">Aucune donnée disponible.</p>`;
+
+    const competencesManquantesHtml = manquantes.length
+        ? `<ul class="skills-list">${manquantes.map(item => `<li class="skill-chip bad"><i data-lucide="x"></i><span>${item}</span></li>`).join("")}</ul>`
+        : `<p class="empty-message">Aucune donnée disponible.</p>`;
+
+    const finalAnalysis = analysisText === "Aucune explication détaillée n'a été générée." ? "Aucune explication détaillée n'a été générée." : analysisText;
+
+    return `
+        <div class="explanation-summary">
+            <div>
+                <strong>${safeText(candidat.candidat_nom || "Candidat", "Candidat")}</strong>
+                <small>Score global : ${score}%</small>
+            </div>
+            <span class="match-level-badge ${matchingLevel.className}">${matchingLevel.label}</span>
+        </div>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="chart-no-axes-column"></i> Détail du score</h3>
+            <div class="score-details">
+                ${detailsRows}
+            </div>
+        </section>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="sparkles"></i> Points forts</h3>
+            ${pointsFortsHtml}
+        </section>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="circle-alert"></i> Points à améliorer</h3>
+            ${pointsAmeliorerHtml}
+        </section>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="check"></i> Compétences correspondantes</h3>
+            ${competencesHtml}
+        </section>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="x"></i> Compétences manquantes</h3>
+            ${competencesManquantesHtml}
+        </section>
+
+        <section class="explanation-section">
+            <h3><i data-lucide="brain"></i> Analyse de l'IA</h3>
+            <p class="analysis-text">${finalAnalysis}</p>
+        </section>
+    `;
+}
+
+function openMatchingExplanation(candidat) {
+    const modal = document.getElementById("score-explanation-modal");
+    const content = document.getElementById("matching-explanation-content");
+
+    if (!modal || !content) {
+        return;
+    }
+
+    if (!candidat || Object.keys(candidat).length === 0) {
+        content.innerHTML = "<p class='empty-message'>Les détails du matching ne sont pas disponibles.</p>";
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+        return;
+    }
+
+    content.innerHTML = buildExplanationContent(candidat);
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+function closeMatchingExplanation() {
+    const modal = document.getElementById("score-explanation-modal");
+    if (!modal) {
+        return;
+    }
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+}
+
+const modal = document.getElementById("score-explanation-modal");
+if (modal) {
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeMatchingExplanation();
+        }
+    });
+
+    const modalClose = modal.querySelector("[data-close-modal]");
+    if (modalClose) {
+        modalClose.addEventListener("click", closeMatchingExplanation);
+    }
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        const openModal = document.getElementById("score-explanation-modal");
+        if (openModal && openModal.classList.contains("open")) {
+            closeMatchingExplanation();
+        }
+    }
+});
+
+function createCandidateCard(candidat, index) {
+    const details = parseDetails(candidat.details_matching || {});
+    const score = Number(candidat.score ?? 0);
+    const scoreColor = getScoreColor(score);
+    const position = index + 1;
+    const competences = parseList(candidat.competences_correspondantes);
+    const competencesManquantes = parseList(candidat.competences_manquantes);
+    const analyse = (candidat.analyse_ia || "").trim() || "Analyse indisponible";
+
+    const card = document.createElement("article");
+    card.className = "candidate-card";
+
+    card.innerHTML = `
+        <div class="candidate-header">
+            <div class="identity">
+                <div class="position ${getPositionClass(index)}">${position}</div>
+                <div>
+                    <div class="name">${candidat.candidat_nom || "Candidat"}</div>
+                    <div class="email">${candidat.candidat_email || "Aucun email"}</div>
+                </div>
+            </div>
+
+            <div class="score-block">
+                <div class="score-ring" style="--score:${Math.max(0, Math.min(100, score))}; --score-color:${scoreColor};">
+                    <span class="score-ring-value">${score}%</span>
+                </div>
+                <div class="score-content">
+                    <div class="match-score" style="color:${scoreColor};">${score}%</div>
+                    <div class="match-label">Score</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="score-bar-grid">
+            ${createMetric("Compétences", details.competences ?? 0)}
+            ${createMetric("Expérience", details.experience ?? 0)}
+            ${createMetric("Formation", details.formation ?? 0)}
+            ${createMetric("Langues", details.langues ?? 0)}
+        </div>
+
+        <div class="section">
+            <h3 class="section-title"><i data-lucide="check"></i> Compétences correspondantes</h3>
+            ${competences.length ? `<div class="tags">${competences.map(item => createSkillBadge(item, false)).join("")}</div>` : `<span class="empty-state">Aucune compétence correspondante</span>`}
+        </div>
+
+        <div class="section">
+            <h3 class="section-title"><i data-lucide="x"></i> Compétences manquantes</h3>
+            ${competencesManquantes.length ? `<div class="tags">${competencesManquantes.map(item => createSkillBadge(item, true)).join("")}</div>` : `<span class="empty-state">Aucune compétence manquante</span>`}
+        </div>
+
+        <div class="analysis-panel" aria-live="polite">
+            <div class="analysis-header">
+                <span><i data-lucide="chart-no-axes-column"></i> Analyse IA</span>
+            </div>
+            <p class="analysis-text">${analyse}</p>
+        </div>
+
+        <div class="candidate-actions">
+            <button class="btn-small btn-primary" onclick="voirProfilCandidat(${candidat.candidat_id})" title="Voir le profil du candidat">
+                <i data-lucide="user"></i>
+                <span>Voir le profil</span>
+            </button>
+            <button class="btn-small btn-secondary" data-toggle-score-explanation title="Comprendre le score du candidat">
+                <i data-lucide="brain"></i>
+                <span>Comprendre le score</span>
+            </button>
+            <button class="btn-small btn-secondary" data-toggle-analysis title="Afficher ou masquer l'analyse IA">
+                <i data-lucide="chevron-down"></i>
+                <span>Voir l'analyse</span>
+            </button>
+        </div>
+    `;
+
+    const toggleBtn = card.querySelector("[data-toggle-analysis]");
+    const explanationBtn = card.querySelector("[data-toggle-score-explanation]");
+    const analysisPanel = card.querySelector(".analysis-panel");
+    const toggleText = toggleBtn.querySelector("span");
+    const toggleIcon = toggleBtn.querySelector("i");
+
+    explanationBtn.addEventListener("click", () => openMatchingExplanation(candidat));
+
+    toggleBtn.addEventListener("click", () => {
+        const visible = analysisPanel.classList.toggle("visible");
+        toggleText.textContent = visible ? "Masquer l'analyse" : "Voir l'analyse";
+        toggleIcon.setAttribute("data-lucide", visible ? "chevron-up" : "chevron-down");
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+
+    return card;
+}
+
+async function chargerTitreOffre() {
+    const jobTitleBadge = document.getElementById("job-title-badge");
+    if (!jobTitleBadge) return;
+
+    try {
+        const response = await fetch(`/offres/${offreId}`);
+        const data = await response.json();
+
+        if (!data || !data.success || !data.offre) {
+            jobTitleBadge.innerHTML = '<i data-lucide="briefcase"></i><span>Poste non disponible</span>';
+            if (window.lucide) lucide.createIcons();
+            return;
+        }
+
+        const titre = data.offre.titre || "Poste sans titre";
+        const entreprise = data.offre.entreprise || "Entreprise";
+        jobTitleBadge.innerHTML = `<i data-lucide="briefcase"></i><span>${titre} · ${entreprise}</span>`;
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+    catch (erreur) {
+        console.error("Erreur titre offre :", erreur);
+        jobTitleBadge.innerHTML = '<i data-lucide="briefcase"></i><span>Poste non disponible</span>';
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+async function chargerClassement() {
+
+    const resultats = document.getElementById("resultats");
+    const offreInfo = document.getElementById("offre-info");
+
+    if (!resultats || !offreInfo) return;
+
+    try {
+        const response = await fetch(`/offres/${offreId}/classement`);
+        const data = await response.json();
+
+        if (!data.success) {
+            resultats.innerHTML = `<div class="erreur">${data.message}</div>`;
+            return;
+        }
+
+        offreInfo.textContent = `${data.nombre_candidats} candidat(s) analysé(s)`;
+        renderSummary(data.classement || []);
+
+        if ((data.classement || []).length === 0) {
+            resultats.innerHTML = `
+                <div class="chargement">
+                    Aucun candidat analysé pour cette offre.<br><br>
+                    Cliquez sur <strong>"Lancer l'analyse IA"</strong> pour analyser les candidats.
+                </div>
+            `;
+            return;
+        }
+
+        resultats.innerHTML = "";
+        const classement = [...(data.classement || [])].sort((a, b) => (Number(b.score ?? 0) - Number(a.score ?? 0)));
+
+        classement.forEach((candidat, index) => {
+            resultats.appendChild(createCandidateCard(candidat, index));
+        });
+
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+    catch (erreur) {
+        console.error("Erreur classement :", erreur);
+        resultats.innerHTML = `<div class="erreur">Impossible de charger le classement.<br><br>${erreur.message}</div>`;
+    }
+
+}
+
+
+
+async function lancerAnalyse() {
+
+    const bouton =
+        document.getElementById(
+            "btn-analyser"
+        );
+
+
+    const info =
+        document.getElementById(
+            "info-analyse"
+        );
+
+
+    const succes =
+        document.getElementById(
+            "succes"
+        );
+
+
+    bouton.disabled = true;
+
+    bouton.textContent =
+        "Analyse en cours...";
+
+
+    info.style.display =
+        "block";
+
+
+    succes.style.display =
+        "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/test-matching-tous/${offreId}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.message ||
+                "Erreur pendant l'analyse."
+            );
+
+        }
+
+
+        const nombre =
+            data.nombre_candidats || 0;
+
+
+        const resultatsAnalyses =
+            data.resultats || [];
+
+
+        const nombreReussis =
+            resultatsAnalyses.filter(
+                resultat =>
+                    resultat.success
+            ).length;
+
+
+        succes.textContent =
+            `${nombreReussis} candidat(s) sur ${nombre} ont été analysé(s) avec succès.`;
+
+
+        succes.style.display =
+            "block";
+
+
+        info.style.display =
+            "none";
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Recharger le classement
+        |--------------------------------------------------------------------------
+        */
+
+        await chargerClassement();
+
+
+    }
+    catch (erreur) {
+
+        console.error(
+            "Erreur analyse :",
+            erreur
+        );
+
+
+        info.style.display =
+            "none";
+
+
+        succes.style.display =
+            "block";
+
+
+        succes.style.background =
+            "#fdeaea";
+
+
+        succes.style.color =
+            "#dc3545";
+
+
+        succes.textContent =
+            "Erreur : " +
+            erreur.message;
+
+    }
+    finally {
+
+        bouton.disabled =
+            false;
+
+
+        bouton.textContent =
+            "Lancer l'analyse IA";
+
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Voir le profil du candidat
+|--------------------------------------------------------------------------
+*/
+
+function retour() {
+    window.location.href = "/offres-page";
+}
+
+
+function voirProfilCandidat(
+    candidatId
+) {
+
+    window.location.href =
+        "/profil-candidat?id=" +
+        candidatId +
+        "&offre_id=" +
+        offreId;
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Chargement initial
+|--------------------------------------------------------------------------
+*/
+
+chargerTitreOffre();
+chargerClassement();
+
+</script>
+
+</body>
+
+</html>

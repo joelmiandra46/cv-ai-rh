@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard RH - CV AI</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-primary-soft: #dbeafe;
+            --color-secondary: #64748b;
+            --color-background: #f8fafc;
+            --color-card: #ffffff;
+            --color-border: #e2e8f0;
+            --color-text: #1e293b;
+            --color-text-secondary: #64748b;
+            --color-muted: #94a3b8;
+            --color-success: #22c55e;
+            --color-success-soft: #dcfce7;
+            --color-warning: #f59e0b;
+            --color-warning-soft: #fef3c7;
+            --color-danger: #ef4444;
+            --color-danger-soft: #fee2e2;
+            --color-header-bg: #1e293b;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --transition: 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: var(--color-header-bg);
+            color: white;
+            padding: 16px 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 2vw, 2.1rem);
+            letter-spacing: -0.03em;
+        }
+
+        .header p {
+            margin: 4px 0 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.92rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform var(--transition), box-shadow var(--transition);
+            min-height: 120px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            background: var(--color-primary-soft);
+            flex-shrink: 0;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: var(--color-success-soft);
+            color: var(--color-success);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: var(--color-warning-soft);
+            color: var(--color-warning);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: var(--color-danger-soft);
+            color: var(--color-danger);
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: clamp(1.6rem, 2vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .stat-subtext {
+            color: var(--color-text-secondary);
+            font-size: 0.82rem;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: #f8fafc;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            min-height: 280px;
+        }
+
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 250px !important;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 620px;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-text-secondary);
+            border-bottom: 1px solid var(--color-border);
+            background: rgba(248, 250, 252, 0.9);
+        }
+
+        tbody td {
+            padding: 14px;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+            font-size: 0.94rem;
+        }
+
+        tbody tr:hover {
+            background: rgba(148, 163, 184, 0.03);
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 62px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            background: var(--color-success-soft);
+            color: #166534;
+        }
+
+        .score-badge.warning {
+            background: var(--color-warning-soft);
+            color: #92400e;
+        }
+
+        .score-badge.danger {
+            background: var(--color-danger-soft);
+            color: #991b1b;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .action-btn {
+            flex: 1 1 220px;
+            min-width: 220px;
+            border: 1px solid var(--color-border);
+            background: linear-gradient(180deg, #ffffff, #f8fafc);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--color-text);
+            cursor: pointer;
+            min-height: 76px;
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+        }
+
+        .action-btn:hover {
+            border-color: var(--color-primary);
+            background: linear-gradient(180deg, #ffffff, #eff6ff);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-primary-soft);
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .action-btn span:last-child {
+            flex: 1;
+            line-height: 1.2;
+        }
+
+        .loading-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(37, 99, 235, 0.2);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--color-text-secondary);
+            padding: 18px 12px;
+        }
+
+        @media (max-width: 980px) {
+            .stats-grid,
+            .chart-grid {
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+
+            .quick-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+        }
+
+        @media (max-width: 620px) {
+            .stats-grid,
+            .chart-grid,
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                display: grid;
+            }
+
+            .header {
+                padding: 14px 16px;
+            }
+
+            .container {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <h1>Dashboard RH</h1>
+            <p>Vue d'ensemble du recrutement</p>
+        </div>
+
+        <div class="nav-actions">
+            <button class="nav-link" onclick="window.location.href='/'">
+                <i data-lucide="arrow-left"></i>
+                <span>Retour à l'accueil</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="stats-grid" aria-label="Statistiques principales">
+            <article class="stat-card">
+                <div class="stat-icon"><i data-lucide="users"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Candidats</span>
+                    <span id="stat-candidats" class="stat-value">0</span>
+                    <span class="stat-subtext">Total enregistrés</span>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon"><i data-lucide="file-text"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">CV analysés</span>
+                    <span id="stat-cv" class="stat-value">0</span>
+                    <span class="stat-subtext">Documents traités</span>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon"><i data-lucide="briefcase"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Offres</span>
+                    <span id="stat-offres" class="stat-value">0</span>
+                    <span class="stat-subtext">Postes actifs</span>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon"><i data-lucide="target"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Matchings</span>
+                    <span id="stat-matchings" class="stat-value">0</span>
+                    <span class="stat-subtext">Analyses effectuées</span>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel" aria-label="Statistiques de recrutement">
+            <div class="panel-header">
+                <h2><i data-lucide="bar-chart-3"></i> Statistiques de recrutement</h2>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <canvas id="candidatsParOffreChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel" aria-label="Dernières analyses">
+            <div class="panel-header">
+                <h2><i data-lucide="file-text"></i> Dernières analyses</h2>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidat</th>
+                            <th>Offre</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentAnalysesBody">
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <span class="loading-box"><span class="spinner"></span>Chargement...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel" aria-label="Actions rapides">
+            <div class="panel-header">
+                <h2><i data-lucide="sparkles"></i> Actions rapides</h2>
+            </div>
+
+            <div class="quick-actions">
+                <button class="action-btn" onclick="window.location.href='/'">
+                    <span class="action-icon"><i data-lucide="user-plus"></i></span>
+                    <span>Ajouter un CV</span>
+                </button>
+
+
+
+
+
+                <button class="action-btn" onclick="window.location.href='/offres-page'">
+                    <span class="action-icon"><i data-lucide="briefcase"></i></span>
+                    <span>Voir les offres</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const dashboardState = {
+            charts: {}
+        };
+
+        function formatDate(dateString) {
+            if (!dateString) {
+                return '—';
+            }
+
+            const date = new Date(dateString);
+            if (Number.isNaN(date.getTime())) {
+                return dateString;
+            }
+
+            return date.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getScoreClass(score) {
+            if (score >= 75) return 'score-badge';
+            if (score >= 50) return 'score-badge warning';
+            return 'score-badge danger';
+        }
+
+        function renderStats(stats) {
+            document.getElementById('stat-candidats').textContent = stats.total_candidats || 0;
+            document.getElementById('stat-cv').textContent = stats.total_cv_analyzes || 0;
+            document.getElementById('stat-offres').textContent = stats.total_offres || 0;
+            document.getElementById('stat-matchings').textContent = stats.total_matchings || 0;
+        }
+
+        function renderRecentAnalyses(rows) {
+            const tbody = document.getElementById('recentAnalysesBody');
+
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Aucune analyse récente pour le moment.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map((row) => {
+                const score = Number(row.score ?? 0);
+                const scoreClass = getScoreClass(score);
+
+                return `
+                    <tr>
+                        <td>${row.candidat || '—'}</td>
+                        <td>${row.offre || '—'}</td>
+                        <td><span class="${scoreClass}">${score.toFixed(0)}%</span></td>
+                        <td>${formatDate(row.date_analyse)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCandidatsParOffre(data) {
+            const labels = data.map(item => item.titre || 'Sans titre');
+            const values = data.map(item => Number(item.nombre || 0));
+
+            if (dashboardState.charts.candidatsParOffre) {
+                dashboardState.charts.candidatsParOffre.destroy();
+            }
+
+            dashboardState.charts.candidatsParOffre = new Chart(document.getElementById('candidatsParOffreChart'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Candidats',
+                        data: values,
+                        backgroundColor: '#2563eb',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderScoreBreakdown(data) {
+            const labels = data.map(item => item.label || '—');
+            const values = data.map(item => Number(item.value || 0));
+
+            if (dashboardState.charts.scoreChart) {
+                dashboardState.charts.scoreChart.destroy();
+            }
+
+            dashboardState.charts.scoreChart = new Chart(document.getElementById('scoreChart'), {
+                type: 'doughnut',
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#2563eb', '#22c55e', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadDashboard() {
+            try {
+                const [statsResponse, matchingResponse, offreResponse, recentResponse] = await Promise.all([
+                    fetch('/api/dashboard/stats'),
+                    fetch('/api/dashboard/matchings'),
+                    fetch('/api/dashboard/candidats-par-offre'),
+                    fetch('/api/dashboard/recent-analyses')
+                ]);
+
+                const statsData = await statsResponse.json();
+                const matchingData = await matchingResponse.json();
+                const offreData = await offreResponse.json();
+                const recentData = await recentResponse.json();
+
+                if (!statsData.success) {
+                    throw new Error(statsData.message || 'Impossible de charger les statistiques.');
+                }
+
+                renderStats(statsData.stats || {});
+                renderScoreBreakdown(matchingData.series || []);
+                renderCandidatsParOffre(offreData.series || []);
+                renderRecentAnalyses(recentData.analyses || []);
+
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('recentAnalysesBody').innerHTML = `
+                    <tr>
+                        <td colspan="4" class="empty-state">Erreur lors du chargement du dashboard.</td>
+                    </tr>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>

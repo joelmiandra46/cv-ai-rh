@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Modifier l'offre - CV AI</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #1f2937;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 20px 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.top-actions {
+    margin-bottom: 20px;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-secondary {
+    background: #374151;
+    color: white;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(37, 99, 235, 0.10);
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.message {
+    display: none;
+
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.message.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.message.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    color: #6b7280;
+}
+
+.required {
+    color: #dc2626;
+}
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 18px 20px;
+    }
+
+    main {
+        margin-top: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>
+    CV AI
+</h1>
+
+</header>
+
+
+<main>
+
+<div class="top-actions">
+
+    <button
+        class="btn btn-secondary"
+        onclick="retourDetail()"
+    >
+        ← Retour au détail
+    </button>
+
+</div>
+
+
+<div
+    id="message"
+    class="message"
+></div>
+
+
+<div class="card">
+
+    <div class="card-title">
+        Modifier l'offre d'emploi
+    </div>
+
+
+    <div
+        id="chargement"
+        class="loading"
+    >
+        Chargement de l'offre...
+    </div>
+
+
+    <form
+        id="offreForm"
+        style="display: none;"
+    >
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label for="titre">
+
+                    Intitulé du poste
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="titre"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="entreprise">
+                    Entreprise
+                </label>
+
+                <input
+                    type="text"
+                    id="entreprise"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label for="description">
+                    Description du poste
+                </label>
+
+                <textarea
+                    id="description"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label for="missions">
+                    Missions principales
+                </label>
+
+                <textarea
+                    id="missions"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="competences_obligatoires">
+                    Compétences obligatoires
+                </label>
+
+                <textarea
+                    id="competences_obligatoires"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="competences_souhaitees">
+                    Compétences souhaitées
+                </label>
+
+                <textarea
+                    id="competences_souhaitees"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="niveau_etude">
+                    Niveau d'étude
+                </label>
+
+                <select id="niveau_etude">
+
+                    <option value="">
+                        Sélectionnez
+                    </option>
+
+                    <option value="Bac">
+                        Bac
+                    </option>
+
+                    <option value="Bac+2">
+                        Bac+2
+                    </option>
+
+                    <option value="Bac+3">
+                        Bac+3 / Licence
+                    </option>
+
+                    <option value="Bac+4">
+                        Bac+4
+                    </option>
+
+                    <option value="Bac+5">
+                        Bac+5 / Master
+                    </option>
+
+                    <option value="Doctorat">
+                        Doctorat
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="experience">
+                    Expérience demandée
+                </label>
+
+                <input
+                    type="text"
+                    id="experience"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="type_contrat">
+                    Type de contrat
+                </label>
+
+                <select id="type_contrat">
+
+                    <option value="">
+                        Sélectionnez
+                    </option>
+
+                    <option value="CDI">
+                        CDI
+                    </option>
+
+                    <option value="CDD">
+                        CDD
+                    </option>
+
+                    <option value="Stage">
+                        Stage
+                    </option>
+
+                    <option value="Alternance">
+                        Alternance
+                    </option>
+
+                    <option value="Freelance">
+                        Freelance
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="localisation">
+                    Localisation
+                </label>
+
+                <input
+                    type="text"
+                    id="localisation"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="salaire">
+                    Salaire
+                </label>
+
+                <input
+                    type="text"
+                    id="salaire"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="langues">
+                    Langues demandées
+                </label>
+
+                <input
+                    type="text"
+                    id="langues"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="date_limite">
+                    Date limite de candidature
+                </label>
+
+                <input
+                    type="date"
+                    id="date_limite"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="statut">
+                    Statut
+                </label>
+
+                <select id="statut">
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="draft">
+                        Brouillon
+                    </option>
+
+                    <option value="closed">
+                        Clôturée
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                💾 Enregistrer les modifications
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="retourDetail()"
+            >
+                Annuler
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</main>
+
+
+<script>
+
+let offreId = null;
+
+
+function retourDetail() {
+
+    if (offreId) {
+
+        window.location.href =
+            "/offres-detail?id=" + offreId;
+
+    } else {
+
+        window.location.href =
+            "/offres-page";
+
+    }
+
+}
+
+
+function afficherMessage(
+    message,
+    type
+) {
+
+    const element =
+        document.getElementById(
+            "message"
+        );
+
+    element.textContent =
+        message;
+
+    element.className =
+        "message " + type;
+
+}
+
+
+async function chargerOffre() {
+
+    const parametres =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    offreId =
+        parametres.get("id");
+
+
+    if (!offreId) {
+
+        afficherMessage(
+            "Identifiant de l'offre manquant.",
+            "error"
+        );
+
+        document.getElementById(
+            "chargement"
+        ).style.display = "none";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/offres/" + offreId
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) {
+
+            afficherMessage(
+                data.message ||
+                "Offre introuvable.",
+                "error"
+            );
+
+            document.getElementById(
+                "chargement"
+            ).style.display = "none";
+
+            return;
+
+        }
+
+
+        const offre =
+            data.offre;
+
+
+        document.getElementById(
+            "titre"
+        ).value =
+            offre.titre || "";
+
+
+        document.getElementById(
+            "entreprise"
+        ).value =
+            offre.entreprise || "";
+
+
+        document.getElementById(
+            "description"
+        ).value =
+            offre.description || "";
+
+
+        document.getElementById(
+            "missions"
+        ).value =
+            offre.missions || "";
+
+
+        document.getElementById(
+            "competences_obligatoires"
+        ).value =
+            offre.competences_obligatoires || "";
+
+
+        document.getElementById(
+            "competences_souhaitees"
+        ).value =
+            offre.competences_souhaitees || "";
+
+
+        document.getElementById(
+            "niveau_etude"
+        ).value =
+            offre.niveau_etude || "";
+
+
+        document.getElementById(
+            "experience"
+        ).value =
+            offre.experience || "";
+
+
+        document.getElementById(
+            "type_contrat"
+        ).value =
+            offre.type_contrat || "";
+
+
+        document.getElementById(
+            "localisation"
+        ).value =
+            offre.localisation || "";
+
+
+        document.getElementById(
+            "salaire"
+        ).value =
+            offre.salaire || "";
+
+
+        document.getElementById(
+            "langues"
+        ).value =
+            offre.langues || "";
+
+
+        if (offre.date_limite) {
+
+            document.getElementById(
+                "date_limite"
+            ).value =
+                String(
+                    offre.date_limite
+                ).substring(
+                    0,
+                    10
+                );
+
+        }
+
+
+        document.getElementById(
+            "statut"
+        ).value =
+            offre.statut || "active";
+
+
+        document.getElementById(
+            "chargement"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "offreForm"
+        ).style.display =
+            "block";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "Erreur lors du chargement de l'offre.",
+            "error"
+        );
+
+        document.getElementById(
+            "chargement"
+        ).style.display =
+            "none";
+
+    }
+
+}
+
+
+async function enregistrerModifications() {
+
+    const titre =
+        document
+            .getElementById("titre")
+            .value
+            .trim();
+
+
+    if (!titre) {
+
+        afficherMessage(
+            "L'intitulé du poste est obligatoire.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const params =
+        new URLSearchParams();
+
+
+    params.append(
+        "titre",
+        titre
+    );
+
+    params.append(
+        "entreprise",
+        document
+            .getElementById("entreprise")
+            .value
+            .trim()
+    );
+
+    params.append(
+        "description",
+        document
+            .getElementById("description")
+            .value
+            .trim()
+    );
+
+    params.append(
+        "missions",
+        document
+            .getElementById("missions")
+            .value
+            .trim()
+    );
+
+    params.append(
+        "competences_obligatoires",
+        document
+            .getElementById(
+                "competences_obligatoires"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "competences_souhaitees",
+        document
+            .getElementById(
+                "competences_souhaitees"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "niveau_etude",
+        document
+            .getElementById(
+                "niveau_etude"
+            )
+            .value
+    );
+
+    params.append(
+        "experience",
+        document
+            .getElementById(
+                "experience"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "type_contrat",
+        document
+            .getElementById(
+                "type_contrat"
+            )
+            .value
+    );
+
+    params.append(
+        "localisation",
+        document
+            .getElementById(
+                "localisation"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "salaire",
+        document
+            .getElementById(
+                "salaire"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "langues",
+        document
+            .getElementById(
+                "langues"
+            )
+            .value
+            .trim()
+    );
+
+    params.append(
+        "date_limite",
+        document
+            .getElementById(
+                "date_limite"
+            )
+            .value
+    );
+
+    params.append(
+        "statut",
+        document
+            .getElementById(
+                "statut"
+            )
+            .value
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/offres/" + offreId,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        params.toString()
+                }
+            );
+
+
+            const texte =
+                await response.text();
+
+            console.log(
+                "Statut HTTP :",
+                response.status
+            );
+
+            console.log(
+                "Réponse serveur :",
+                texte
+            );
+
+            let data;
+
+            try {
+
+                data = JSON.parse(texte);
+
+            } catch (error) {
+
+                afficherMessage(
+                    "Erreur serveur : " + texte,
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+        if (data.success) {
+
+            afficherMessage(
+                "Offre modifiée avec succès.",
+                "success"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "/offres-detail?id=" +
+                        offreId;
+
+                },
+                800
+            );
+
+
+        } else {
+
+            afficherMessage(
+                data.message ||
+                "Impossible de modifier l'offre.",
+                "error"
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        afficherMessage(
+            "Erreur lors de la modification de l'offre.",
+            "error"
+        );
+
+    }
+
+}
+
+
+document
+    .getElementById("offreForm")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            enregistrerModifications();
+
+        }
+    );
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        chargerOffre();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,17 @@
+# Environnement Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Variables secrètes
+.env
+
+# CV importés
+uploads/
+
+# Fichiers temporaires
+*.log
+
+# IDE
+.vscode/

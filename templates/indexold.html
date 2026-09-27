@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANALYSE CV - Gestion des candidats</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #dbeafe;
+        --primary-dark: #1e40af;
+        --bg: #f8fafc;
+        --card-bg: #fff;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --text-inverse: #ffffff;
+        --border: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --success: #22c55e;
+        --success-light: #dcfce7;
+        --success-dark: #16a34a;
+        --error: #ef4444;
+        --error-light: #fee2e2;
+        --error-dark: #dc2626;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --warning-dark: #92400e;
+        --header-bg: #1e293b;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --radius-full: 9999px;
+        --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-hover: 0 2px 8px rgba(0,0,0,0.12);
+        --shadow-primary: 0 2px 8px rgba(37,99,235,0.25);
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --spacing-xl: 20px;
+        --spacing-2xl: 24px;
+        --spacing-3xl: 28px;
+        --text-xs: 12px;
+        --text-sm: 13px;
+        --text-base: 14px;
+        --text-lg: 15px;
+        --text-xl: 16px;
+        --text-2xl: 18px;
+        --text-3xl: 20px;
+        --text-4xl: 22px;
+        --font-normal: 400;
+        --font-medium: 500;
+        --font-semibold: 600;
+        --font-bold: 700;
+        --leading-tight: 1.25;
+        --leading-normal: 1.45;
+        --leading-relaxed: 1.55;
+        --transition: 0.2s ease;
+        --header-height: 48px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+        color: var(--text);
+        background: var(--bg);
+    }
+    .header {
+        background: var(--header-bg);
+        color: var(--text-inverse);
+        height: var(--header-height);
+        padding: 0 var(--spacing-xl);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-md);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .header h1 {
+        margin: 0;
+        font-size: var(--text-3xl);
+        font-weight: var(--font-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+    }
+    .header p { display: none; }
+    .container {
+        flex: 1;
+        overflow-y: auto;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: var(--spacing-md);
+    }
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card h2 {
+        margin: 0 0 var(--spacing-md);
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
+        color: var(--text);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--border);
+    }
+    button {
+        border: none;
+        border-radius: var(--radius);
+        padding: 10px 16px;
+        cursor: pointer;
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+        font-family: inherit;
+        transition: all var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-xs);
+        white-space: nowrap;
+        line-height: 1;
+    }
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    button:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+    .btn-primary {
+        background: var(--primary);
+        color: var(--text-inverse);
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: var(--primary-hover);
+        box-shadow: var(--shadow-primary);
+    }
+    .btn-secondary {
+        background: var(--card-bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background: var(--bg);
+        border-color: var(--border-strong);
+        box-shadow: var(--shadow-hover);
+    }
+    .btn-danger {
+        background: var(--error);
+        color: var(--text-inverse);
+        padding: 10px 12px;
+    }
+    .btn-danger:hover:not(:disabled) {
+        background: var(--error-dark);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+    }
+    .btn-delete {
+        background: var(--error);
+        color: var(--text-inverse);
+        padding: var(--spacing-xs);
+        width: 28px;
+        height: 28px;
+    }
+    .btn-delete:hover:not(:disabled) {
+        background: var(--error-dark);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+    }
+    .nav-link {
+        background: var(--primary);
+        color: var(--text-inverse);
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+        border-radius: var(--radius);
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        transition: all var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+    .nav-link:hover {
+        background: var(--primary-hover);
+        box-shadow: var(--shadow-primary);
+    }
+    .upload-area {
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        text-align: center;
+        background: var(--bg);
+        margin: var(--spacing-md) 0;
+    }
+    .upload-area:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+    .upload-area p {
+        margin: 0 0 var(--spacing-lg);
+        color: var(--text-secondary);
+    }
+    input[type="file"] {
+        margin: 0 0 var(--spacing-md);
+        display: block;
+        max-width: 400px;
+    }
+    .message {
+        margin-top: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border-radius: var(--radius);
+        display: none;
+        font-size: var(--text-sm);
+        border: 1px solid transparent;
+    }
+    .message.success {
+        display: block;
+        background: var(--success-light);
+        color: var(--success-dark);
+        border-color: var(--success);
+    }
+    .message.error {
+        display: block;
+        background: var(--error-light);
+        color: var(--error-dark);
+        border-color: var(--error);
+    }
+    .loading {
+        display: none;
+        margin-top: var(--spacing-sm);
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .table-container {
+        overflow-x: auto;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        max-height: 40vh;
+        overflow-y: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--text-sm);
+    }
+    th, td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+    th {
+        background: var(--bg);
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    td {
+        font-size: var(--text-base);
+        vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: var(--bg); }
+    .empty {
+        text-align: center;
+        padding: 28px;
+        color: var(--text-muted);
+    }
+    .candidate-result {
+        display: none;
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+    .result-section {
+        margin-bottom: var(--spacing-lg);
+    }
+    .result-section h3 {
+        margin: 0 0 var(--spacing-md);
+        font-size: var(--text-xl);
+        font-weight: var(--font-bold);
+        color: var(--text);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--border);
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: var(--spacing-md);
+    }
+    .info-box {
+        background: var(--bg);
+        border-radius: var(--radius);
+        padding: var(--spacing-md);
+        border: 1px solid var(--border);
+    }
+    .info-box strong {
+        display: block;
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .info-box span {
+        font-size: var(--text-base);
+        color: var(--text);
+    }
+    .item {
+        background: var(--bg);
+        border-left: 4px solid var(--primary);
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+    }
+    .item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: var(--text-base);
+        color: var(--text);
+        font-weight: 700;
+    }
+    .item div {
+        color: var(--text-secondary);
+        font-size: var(--text-sm);
+        margin-bottom: 4px;
+    }
+    .item small {
+        color: var(--text-muted);
+        font-size: 12px;
+        display: block;
+        margin-top: 4px;
+    }
+    .item p {
+        margin: 8px 0 0;
+        color: var(--text-secondary);
+        font-size: var(--text-sm);
+        line-height: 1.5;
+    }
+    .badge {
+        display: inline-block;
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 4px 10px;
+        border-radius: 20px;
+        margin: 3px;
+        font-size: 12px;
+        border: 1px solid var(--primary);
+    }
+    .candidate-count {
+        background: var(--primary);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+    }
+    .card-header h2 {
+        margin: 0;
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
+        color: var(--text);
+    }
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .search-area {
+        display: flex;
+        gap: 12px;
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .search-input {
+        flex: 1;
+        min-width: 160px;
+        height: 34px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: var(--text-base);
+        outline: none;
+        background: var(--card-bg);
+    }
+    .search-input::placeholder {
+        color: var(--text-muted);
+    }
+    .search-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-light);
+    }
+    .search-info {
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-secondary);
+        font-size: var(--text-sm);
+    }
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+    }
+    .profile-header h2 {
+        margin: 0;
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
+        color: var(--text);
+    }
+    .btn-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .loading::after {
+        content: '';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--primary);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-left: 6px;
+        vertical-align: middle;
+    }
+    @media (max-width: 768px) {
+        .header {
+            height: 46px;
+            padding: 0 16px;
+        }
+        .header h1 {
+            font-size: var(--text-xl);
+        }
+        .container {
+            padding: 8px;
+        }
+        .card {
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .card h2 {
+            font-size: var(--text-xl);
+        }
+        .result-section h3 {
+            font-size: var(--text-lg);
+        }
+        th, td {
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+        .search-area {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .search-input {
+            width: 100%;
+        }
+        .card-header, .profile-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .btn-group {
+            flex-direction: column;
+        }
+        .btn-group button {
+            width: 100%;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+        .table-container {
+            max-height: 30vh;
+        }
+        .upload-area {
+            padding: 20px;
+        }
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    @media (max-width: 480px) {
+        .header h1 {
+            font-size: var(--text-lg);
+        }
+        .card h2 {
+            font-size: var(--text-lg);
+        }
+        .result-section h3 {
+            font-size: var(--text-base);
+        }
+        .btn-delete {
+            width: 24px;
+            height: 24px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>ANALYSE CV</h1>
+<div class="header-actions">
+<button class="nav-link" onclick="window.location.href='/offres-page'">Offres d'emploi</button>
+</div>
+</div>
+
+<div class="container">
+<div class="card scrollable">
+<h2>Analyser un CV</h2>
+<div class="upload-area">
+<p>Sélectionnez un fichier CV au format PDF</p>
+<input type="file" id="pdfFile" accept=".pdf,application/pdf">
+<button class="btn-primary" onclick="analyserCV()">Analyser le CV</button>
+<div id="loading" class="loading">Analyse du CV en cours...</div>
+<div id="message" class="message"></div>
+</div>
+</div>
+
+<div class="card candidate-result" id="resultCard">
+<h2>Résultat de l'analyse</h2>
+<div class="result-section">
+<h3>Informations du candidat</h3>
+<div class="info-grid" id="candidateInfo"></div>
+</div>
+<div class="result-section">
+<h3>Profil</h3>
+<div class="item" id="profile"></div>
+</div>
+<div class="result-section">
+<h3>Formations</h3>
+<div id="formations"></div>
+</div>
+<div class="result-section">
+<h3>Expériences professionnelles</h3>
+<div id="experiences"></div>
+</div>
+<div class="result-section">
+<h3>Compétences</h3>
+<div id="competences"></div>
+</div>
+<div class="result-section">
+<h3>Langues</h3>
+<div id="langues"></div>
+</div>
+</div>
+
+<div class="card candidate-result" id="profileCard">
+<div class="profile-header">
+<h2>Profil du candidat</h2>
+<button class="btn-secondary" onclick="fermerProfil()">← Retour à la liste</button>
+</div>
+<div class="result-section">
+<h3>Informations personnelles</h3>
+<div class="info-grid" id="profileInfo"></div>
+</div>
+<div class="result-section">
+<h3>Profil professionnel</h3>
+<div class="item" id="profileDescription"></div>
+</div>
+<div class="result-section">
+<h3>Formations</h3>
+<div id="profileFormations"></div>
+</div>
+<div class="result-section">
+<h3>Expériences professionnelles</h3>
+<div id="profileExperiences"></div>
+</div>
+<div class="result-section">
+<h3>Compétences</h3>
+<div id="profileCompetences"></div>
+</div>
+<div class="result-section">
+<h3>Langues</h3>
+<div id="profileLangues"></div>
+</div>
+</div>
+
+<div class="card scrollable" id="candidateListCard">
+<div class="card-header">
+<h2>Candidats enregistrés</h2>
+<div class="header-actions">
+<span id="candidateCount" class="candidate-count">0 candidat</span>
+<button class="btn-secondary" onclick="chargerCandidats()">Actualiser</button>
+</div>
+</div>
+<div class="search-area">
+<input type="text" id="searchInput" class="search-input" placeholder="Rechercher par nom, compétence, formation, expérience..." onkeydown="gererToucheRecherche(event)">
+<button class="btn-primary" onclick="rechercherCandidats()">Rechercher</button>
+<button class="btn-secondary" onclick="reinitialiserRecherche()">Réinitialiser</button>
+</div>
+<div id="searchInfo" class="search-info">Affichage de tous les candidats.</div>
+<div class="table-container">
+<table>
+<thead><tr><th>ID</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>CV</th><th>Date</th><th>Action</th></tr></thead>
+<tbody id="candidateTable"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<script>
+function escapeHtml(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
+
+async function analyserCV(){
+const f=document.getElementById("pdfFile"),m=document.getElementById("message"),l=document.getElementById("loading");
+m.className="message";m.innerText="";
+if(!f.files.length){m.className="message error";m.innerText="Veuillez sélectionner un fichier PDF.";return}
+const file=f.files[0];
+if(!file.name.toLowerCase().endsWith(".pdf")){m.className="message error";m.innerText="Veuillez sélectionner uniquement un fichier PDF.";return}
+const fd=new FormData();fd.append("file",file);
+l.style.display="block";
+try{
+const r=await fetch("/extract-pdf",{method:"POST",body:fd});
+const rt=await r.text();
+let d;try{d=JSON.parse(rt)}catch(e){if(!r.ok)throw new Error("Erreur serveur ("+r.status+")");throw new Error("Réponse invalide")}
+if(!r.ok)throw new Error(d.message||d.detail||"Erreur serveur ("+r.status+")");
+if(!d.success)throw new Error(d.message||"Erreur lors de l'analyse");
+afficherResultat(d.analyse_ia);
+m.className="message success";m.innerText="CV analysé et enregistré avec succès.";
+chargerCandidats();
+catch(e){console.error(e);m.className="message error";m.innerText="Erreur : "+(e.message.includes("429")?"Limite OpenRouter atteinte. Veuillez patienter avant de réessayer.":e.message)}
+finally{l.style.display="none"}
+}
+
+function afficherResultat(data){
+const rc=document.getElementById("resultCard");rc.style.display="block";
+const c=data.candidat||{};
+document.getElementById("candidateInfo").innerHTML=`
+<div class="info-box"><strong>Nom</strong><span>${escapeHtml(c.nom||"")}</span></div>
+<div class="info-box"><strong>Email</strong><span>${escapeHtml(c.email||"")}</span></div>
+<div class="info-box"><strong>Téléphone</strong><span>${escapeHtml(c.telephone||"")}</span></div>
+<div class="info-box"><strong>Adresse</strong><span>${escapeHtml(c.adresse||"")}</span></div>`;
+document.getElementById("profile").innerText=data.profil||"Non renseigné";
+const f=document.getElementById("formations");f.innerHTML="";
+if(data.formations&&data.formations.length>0)data.formations.forEach(x=>{f.innerHTML+=`<div class="item"><strong>${escapeHtml(x.diplome||"")}</strong><div>${escapeHtml(x.etablissement||"")}</div><small>${escapeHtml(x.annee_debut||"")} - ${escapeHtml(x.annee_fin||"")}</small></div>`});
+else f.innerHTML="<p>Aucune formation renseignée.</p>";
+const e=document.getElementById("experiences");e.innerHTML="";
+if(data.experiences&&data.experiences.length>0)data.experiences.forEach(x=>{e.innerHTML+=`<div class="item"><strong>${escapeHtml(x.poste||"")}</strong><div>${escapeHtml(x.entreprise||"")}</div><small>${escapeHtml(x.date_debut||"")} - ${escapeHtml(x.date_fin||"")}</small><p>${escapeHtml(x.description||"")}</p></div>`});
+else e.innerHTML="<p>Aucune expérience renseignée.</p>";
+const comp=document.getElementById("competences");comp.innerHTML="";
+if(data.competences&&data.competences.length>0)data.competences.forEach(x=>{comp.innerHTML+=`<span class="badge">${escapeHtml(x)}</span>`});
+else comp.innerHTML="<p>Aucune compétence renseignée.</p>";
+const lang=document.getElementById("langues");lang.innerHTML="";
+if(data.langues&&data.langues.length>0)data.langues.forEach(x=>{lang.innerHTML+=`<div class="item"><strong>${escapeHtml(x.langue||"")}</strong><div>${escapeHtml(x.niveau||"")}</div></div>`});
+else lang.innerHTML="<p>Aucune langue renseignée.</p>"
+}
+
+async function chargerCandidats(){
+const t=document.getElementById("candidateTable");t.innerHTML=`<tr><td colspan="7" class="empty">Chargement...</td></tr>`;
+try{
+const r=await fetch("/candidats");
+const d=await r.json();
+if(!d.success)throw new Error("Impossible de récupérer les candidats");
+afficherCandidats(d.candidats||[]);
+document.getElementById("searchInfo").innerText="Affichage de tous les candidats."
+catch(e){t.innerHTML=`<tr><td colspan="7" class="empty">Erreur de chargement</td></tr>`;console.error(e)}
+}
+
+async function rechercherCandidats(){
+const s=document.getElementById("searchInput"),r=s.value.trim();
+if(r===""){chargerCandidats();return}
+const t=document.getElementById("candidateTable"),c=document.getElementById("candidateCount"),si=document.getElementById("searchInfo");
+c.innerText="Recherche...";si.innerText='Recherche : "'+r+'"';
+t.innerHTML=`<tr><td colspan="7" class="empty">Recherche en cours...</td></tr>`;
+try{
+const res=await fetch("/rechercher?recherche="+encodeURIComponent(r));
+const d=await res.json();
+if(!d.success)throw new Error(d.message||"Erreur de recherche");
+afficherCandidats(d.candidats||[]);
+if(d.candidats&&d.candidats.length===0)si.innerText='Aucun résultat pour "'+r+'"'
+catch(e){c.innerText="Erreur";t.innerHTML=`<tr><td colspan="7" class="empty">Erreur de recherche</td></tr>`;console.error(e)}
+}
+
+function gererToucheRecherche(e){if(e.key==="Enter")rechercherCandidats()}
+function reinitialiserRecherche(){document.getElementById("searchInput").value="";document.getElementById("searchInfo").innerText="Affichage de tous les candidats.";chargerCandidats()}
+
+function afficherCandidats(cands){
+const t=document.getElementById("candidateTable"),c=document.getElementById("candidateCount");
+cands=cands||[];c.innerText=cands.length+(cands.length>1?" candidats":" candidat");
+t.innerHTML="";
+if(cands.length===0){t.innerHTML=`<tr><td colspan="7" class="empty">Aucun candidat trouvé.</td></tr>`;return}
+cands.forEach(x=>{
+let da="";
+if(x.date_analyse){const d=new Date(x.date_analyse);da=d.toLocaleString("fr-FR")}
+t.innerHTML+=`<tr><td>${x.id}</td><td><strong>${escapeHtml(x.nom||"")}</strong></td><td>${escapeHtml(x.email||"")}</td><td>${escapeHtml(x.telephone||"")}</td><td>${escapeHtml(x.cv_filename||"")}</td><td>${escapeHtml(da)}</td><td style="text-align:right;"><button class="btn-secondary" onclick="voirProfil(${x.id})">Voir le profil</button> <button class="btn-danger" onclick="supprimerCandidat(${x.id})" title="Supprimer">🗑️</button></td></tr>`
+});
+}
+
+async function voirProfil(id){
+try{
+const r=await fetch("/candidats/"+id);
+const d=await r.json();
+if(!d.success)throw new Error(d.message||"Candidat introuvable")
+afficherProfil(d.candidat)
+catch(e){alert("Erreur : "+e.message);console.error(e)}
+}
+
+async function supprimerCandidat(id){
+if(!confirm("Etes-vous sûr de vouloir supprimer ce candidat ? Cette action est irréversible."))return
+const m=document.getElementById("message");m.className="message";m.innerText="";
+try{
+const r=await fetch("/candidats/"+id,{method:"DELETE"});
+const d=await r.json();
+if(!d.success)throw new Error(d.message||"Erreur de suppression")
+m.className="message success";m.innerText="Candidat supprimé avec succès.";
+chargerCandidats();
+setTimeout(()=>{m.className="message";m.innerText=""},3000)
+catch(e){console.error(e);m.className="message error";m.innerText="Erreur : "+e.message}
+}
+
+function afficherProfil(cand){
+const pc=document.getElementById("profileCard"),clc=document.getElementById("candidateListCard"),rc=document.getElementById("resultCard");
+clc.style.display="none";rc.style.display="none";pc.style.display="block";
+document.getElementById("profileInfo").innerHTML=`
+<div class="info-box"><strong>Nom</strong><span>${escapeHtml(cand.nom||"")}</span></div>
+<div class="info-box"><strong>Email</strong><span>${escapeHtml(cand.email||"")}</span></div>
+<div class="info-box"><strong>Téléphone</strong><span>${escapeHtml(cand.telephone||"")}</span></div>
+<div class="info-box"><strong>Adresse</strong><span>${escapeHtml(cand.adresse||"")}</span></div>
+<div class="info-box"><strong>CV</strong><span>${escapeHtml(cand.cv_filename||"")}</span></div>`;
+document.getElementById("profileDescription").innerText=cand.profil||"Non renseigné";
+const f=document.getElementById("profileFormations");f.innerHTML="";
+if(cand.formations&&cand.formations.length>0)cand.formations.forEach(x=>{f.innerHTML+=`<div class="item"><strong>${escapeHtml(x.diplome||"")}</strong><div>${escapeHtml(x.etablissement||"")}</div><small>${escapeHtml(x.annee_debut||"")} - ${escapeHtml(x.annee_fin||"")}</small></div>`});
+else f.innerHTML="<p>Aucune formation renseignée.</p>";
+const e=document.getElementById("profileExperiences");e.innerHTML="";
+if(cand.experiences&&cand.experiences.length>0)cand.experiences.forEach(x=>{e.innerHTML+=`<div class="item"><strong>${escapeHtml(x.poste||"")}</strong><div>${escapeHtml(x.entreprise||"")}</div><small>${escapeHtml(x.date_debut||"")} - ${escapeHtml(x.date_fin||"")}</small><p>${escapeHtml(x.description||"")}</p></div>`});
+else e.innerHTML="<p>Aucune expérience renseignée.</p>";
+const comp=document.getElementById("profileCompetences");comp.innerHTML="";
+if(cand.competences&&cand.competences.length>0)cand.competences.forEach(x=>{comp.innerHTML+=`<span class="badge">${escapeHtml(x)}</span>`});
+else comp.innerHTML="<p>Aucune compétence renseignée.</p>";
+const lang=document.getElementById("profileLangues");lang.innerHTML="";
+if(cand.langues&&cand.langues.length>0)cand.langues.forEach(x=>{lang.innerHTML+=`<div class="item"><strong>${escapeHtml(x.langue||"")}</strong><div>${escapeHtml(x.niveau||"")}</div></div>`});
+else lang.innerHTML="<p>Aucune langue renseignée.</p>"
+window.scrollTo({top:0,behavior:"smooth"})
+}
+
+function fermerProfil(){
+document.getElementById("profileCard").style.display="none";
+document.getElementById("candidateListCard").style.display="block";
+window.scrollTo({top:0,behavior:"smooth"})
+}
+
+document.addEventListener("DOMContentLoaded",function(){chargerCandidats()});
+</script>
+
+</body>
+</html>

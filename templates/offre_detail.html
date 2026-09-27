@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://unpkg.com/lucide@latest"></script>
+<title>Détail de l'offre - CV AI</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #dbeafe;
+        --primary-dark: #1e40af;
+        --bg: #f8fafc;
+        --card-bg: #fff;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --text-inverse: #ffffff;
+        --border: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --success: #22c55e;
+        --success-light: #dcfce7;
+        --success-dark: #16a34a;
+        --error: #ef4444;
+        --error-light: #fee2e2;
+        --error-dark: #dc2626;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --warning-dark: #92400e;
+        --header-bg: #1e293b;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --radius-full: 9999px;
+        --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-hover: 0 2px 8px rgba(0,0,0,0.12);
+        --shadow-primary: 0 2px 8px rgba(37,99,235,0.25);
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --spacing-xl: 20px;
+        --spacing-2xl: 24px;
+        --spacing-3xl: 28px;
+        --text-xs: 12px;
+        --text-sm: 13px;
+        --text-base: 14px;
+        --text-lg: 15px;
+        --text-xl: 16px;
+        --text-2xl: 18px;
+        --text-3xl: 20px;
+        --text-4xl: 24px;
+        --font-normal: 400;
+        --font-medium: 500;
+        --font-semibold: 600;
+        --font-bold: 700;
+        --leading-tight: 1.25;
+        --leading-normal: 1.45;
+        --leading-relaxed: 1.55;
+        --transition: 0.2s ease;
+        --header-height: 70px;
+        --icon-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100dvh; margin: 0; padding: 0; }
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+        color: var(--text);
+        background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .header {
+        background: var(--header-bg);
+        color: var(--text-inverse);
+        min-height: var(--header-height);
+        padding: var(--spacing-md) var(--spacing-xl);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-md);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        flex-wrap: wrap;
+    }
+    .header h1 {
+        margin: 0;
+        font-size: var(--text-4xl);
+        font-weight: var(--font-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+    }
+    .header p { display: none; }
+    .nav-link {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: var(--text-inverse);
+        padding: 10px 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 12px;
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+    }
+    .nav-link:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
+        transform: translateY(-1px);
+    }
+    .container {
+        flex: 1;
+        overflow-y: auto;
+        max-width: 1250px;
+        width: 100%;
+        margin: 0 auto;
+        padding: var(--spacing-xl);
+        padding-top: 18px;
+    }
+    .top-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+    }
+    button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: var(--text-sm);
+        font-weight: 700;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        line-height: 1;
+    }
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    button:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+    button i {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2.1;
+        flex-shrink: 0;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: var(--text-inverse);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+        transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        border-color: #c7d2fe;
+        box-shadow: 0 6px 16px rgba(148, 163, 184, 0.12);
+        transform: translateY(-1px);
+    }
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: var(--text-inverse);
+        box-shadow: 0 8px 18px rgba(239, 68, 68, 0.12);
+    }
+    .btn-danger:hover:not(:disabled) {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.18);
+    }
+    .btn-icon {
+        background: transparent;
+        color: var(--text-secondary);
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+    }
+    .btn-icon:hover:not(:disabled) {
+        background: var(--bg);
+        color: var(--text);
+    }
+    .card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        border-radius: 18px;
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+    .offer-header {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+    .offer-header h2 {
+        font-size: var(--text-3xl);
+        margin-bottom: var(--spacing-sm);
+        color: var(--text);
+        font-weight: var(--font-bold);
+        line-height: var(--leading-tight);
+    }
+    .company {
+        color: var(--text-secondary);
+        font-size: var(--text-lg);
+        margin-bottom: var(--spacing-md);
+    }
+    .status {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--radius-full);
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+    }
+    .status-active {
+        background: var(--success-light);
+        color: var(--success-dark);
+    }
+    .status-closed {
+        background: var(--error-light);
+        color: var(--error-dark);
+    }
+    .status-draft {
+        background: var(--warning-light);
+        color: var(--warning-dark);
+    }
+    .section {
+        margin-bottom: var(--spacing-xl);
+    }
+    .section:last-child {
+        margin-bottom: 0;
+    }
+    .section h3 {
+        font-size: var(--text-2xl);
+        margin-bottom: var(--spacing-md);
+        color: var(--text);
+        font-weight: var(--font-bold);
+    }
+    .section-content {
+        white-space: pre-wrap;
+        line-height: var(--leading-relaxed);
+        color: var(--text-secondary);
+        font-size: var(--text-base);
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    .info-item {
+        background: var(--bg);
+        border-radius: var(--radius);
+        padding: var(--spacing-md);
+        border: 1px solid var(--border);
+    }
+    .info-label {
+        font-size: var(--text-xs);
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-xs);
+        font-weight: var(--font-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .info-value {
+        font-size: var(--text-base);
+        color: var(--text);
+        line-height: var(--leading-normal);
+    }
+    .loading {
+        text-align: center;
+        padding: var(--spacing-3xl);
+        color: var(--text-muted);
+        font-size: var(--text-lg);
+    }
+    .error {
+        text-align: center;
+        padding: var(--spacing-3xl);
+        color: var(--error-dark);
+        background: var(--error-light);
+        border-radius: var(--radius);
+        font-size: var(--text-lg);
+    }
+    /* Loading animation */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .spin {
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+        .header { height: 46px; padding: 0 var(--spacing-md); }
+        .header h1 { font-size: var(--text-xl); }
+        .container { padding: var(--spacing-md); }
+        .card { padding: var(--spacing-lg); margin-bottom: var(--spacing-md); }
+        .offer-header h2 { font-size: var(--text-2xl); }
+        .top-actions { flex-direction: column; align-items: stretch; }
+        .top-actions button { width: 100%; justify-content: center; }
+        .info-grid { grid-template-columns: 1fr; }
+        .nav-link { font-size: var(--text-xs); padding: var(--spacing-xs) var(--spacing-sm); }
+    }
+    @media (max-width: 480px) {
+        .header h1 { font-size: var(--text-lg); }
+        .offer-header h2 { font-size: var(--text-xl); }
+        .section h3 { font-size: var(--text-lg); }
+        .header-actions { gap: var(--spacing-xs); }
+        .nav-link span { display: none; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>ANALYSE CV</h1>
+<div class="header-actions">
+<button class="nav-link" onclick="window.location.href='/'">
+    <i data-lucide="arrow-left"></i>
+    <span>Retour à l'analyse CV</span>
+</button>
+<button class="nav-link" onclick="window.location.href='/offres-page'">
+    <i data-lucide="briefcase-business"></i>
+    <span>Offres d'emploi</span>
+</button>
+</div>
+</div>
+
+<div class="container">
+
+<div class="top-actions">
+<button class="btn-secondary" onclick="retourOffres()">
+    <i data-lucide="arrow-left"></i>
+    <span>Retour aux offres</span>
+</button>
+<button class="btn-primary" onclick="modifierOffre()">
+    <i data-lucide="pencil"></i>
+    <span>Modifier l'offre</span>
+</button>
+<button class="btn-danger" onclick="supprimerOffre()" title="Supprimer">
+    <i data-lucide="trash-2"></i>
+</button>
+</div>
+
+<div id="contenu">
+<div class="card loading"><span class="spin">&#128248;</span> Chargement de l'offre...</div>
+</div>
+
+</div>
+
+<script>
+let offreId = null;
+
+function retourOffres() {
+    window.location.href = "/offres-page";
+}
+
+function modifierOffre() {
+    window.location.href = "/offres-modifier?id=" + offreId;
+}
+
+async function supprimerOffre() {
+    if (!offreId) {
+        afficherErreur("Identifiant de l'offre manquant.");
+        return;
+    }
+    const confirmation = confirm("Voulez-vous vraiment supprimer cette offre ?\n\nCette action est irréversible.");
+    if (!confirmation) return;
+    try {
+        const response = await fetch("/offres/" + offreId, { method: "DELETE" });
+        const data = await response.json();
+        if (data.success) {
+            alert("Offre supprimée avec succès.");
+            window.location.href = "/offres-page";
+        } else {
+            afficherErreur(data.message || "Impossible de supprimer l'offre.");
+        }
+    } catch (error) {
+        console.error(error);
+        afficherErreur("Erreur lors de la suppression de l'offre.");
+    }
+}
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formaterDate(date) {
+    if (!date) return "";
+    const objetDate = new Date(date);
+    if (isNaN(objetDate.getTime())) return String(date);
+    return objetDate.toLocaleString("fr-FR");
+}
+
+function obtenirStatut(statut) {
+    if (statut === "closed") return { texte: "Clôturée", classe: "status-closed", icon: "&#10060;" };
+    if (statut === "draft") return { texte: "Brouillon", classe: "status-draft", icon: "&#128196;" };
+    return { texte: "Active", classe: "status-active", icon: "&#10004;" };
+}
+
+async function chargerOffre() {
+    const parametres = new URLSearchParams(window.location.search);
+    offreId = parametres.get("id");
+    if (!offreId) {
+        afficherErreur("Identifiant de l'offre manquant.");
+        return;
+    }
+    try {
+        const response = await fetch("/offres/" + offreId);
+        const data = await response.json();
+        if (!data.success) {
+            afficherErreur(data.message || "Offre introuvable.");
+            return;
+        }
+        afficherDetail(data.offre);
+    } catch (error) {
+        console.error(error);
+        afficherErreur("Erreur lors du chargement de l'offre.");
+    }
+}
+
+function afficherDetail(offre) {
+    const statut = obtenirStatut(offre.statut);
+    document.getElementById("contenu").innerHTML = `
+        <div class="card">
+            <div class="offer-header">
+                <h2>${escapeHtml(offre.titre)}</h2>
+                <div class="company">${escapeHtml(offre.entreprise || "Entreprise non renseignée")}</div>
+                <span class="status ${statut.classe}">
+                    ${statut.icon}
+                    ${statut.texte}
+                </span>
+            </div>
+            <div class="section">
+                <h3>Description du poste</h3>
+                <div class="section-content">${escapeHtml(offre.description || "Aucune description renseignée.")}</div>
+            </div>
+            <div class="section">
+                <h3>Missions principales</h3>
+                <div class="section-content">${escapeHtml(offre.missions || "Aucune mission renseignée.")}</div>
+            </div>
+            <div class="section">
+                <h3>Compétences obligatoires</h3>
+                <div class="section-content">${escapeHtml(offre.competences_obligatoires || "Aucune compétence obligatoire renseignée.")}</div>
+            </div>
+            <div class="section">
+                <h3>Compétences souhaitées</h3>
+                <div class="section-content">${escapeHtml(offre.competences_souhaitees || "Aucune compétence souhaitée renseignée.")}</div>
+            </div>
+            <div class="section">
+                <h3>Informations du poste</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Niveau d'étude</div>
+                        <div class="info-value">${escapeHtml(offre.niveau_etude || "Non renseigné")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Expérience</div>
+                        <div class="info-value">${escapeHtml(offre.experience || "Non renseignée")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Type de contrat</div>
+                        <div class="info-value">${escapeHtml(offre.type_contrat || "Non renseigné")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Localisation</div>
+                        <div class="info-value">${escapeHtml(offre.localisation || "Non renseignée")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Salaire</div>
+                        <div class="info-value">${escapeHtml(offre.salaire || "Non renseigné")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Langues demandées</div>
+                        <div class="info-value">${escapeHtml(offre.langues || "Non renseignées")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date limite</div>
+                        <div class="info-value">${escapeHtml(offre.date_limite || "Aucune")}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date de création</div>
+                        <div class="info-value">${escapeHtml(formaterDate(offre.date_creation))}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+function afficherErreur(message) {
+    document.getElementById("contenu").innerHTML = `
+        <div class="card">
+            <div class="error">
+                <span>&#9888;</span>
+                ${escapeHtml(message)}
+            </div>
+        </div>
+    `;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+    chargerOffre();
+});
+</script>
+
+</body>
+</html>

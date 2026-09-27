@@ -1,0 +1,1354 @@
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Profil candidat - CV AI
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f9;
+
+            color: #1f2937;
+
+        }
+
+        header {
+
+            background: #111827;
+
+            color: white;
+
+            padding: 20px 40px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            box-shadow:
+                0 2px 8px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.15
+                );
+
+        }
+
+        header h1 {
+
+            font-size: 24px;
+
+            letter-spacing: 1px;
+
+        }
+
+        .header-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+        .btn {
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 11px 18px;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+        .btn:hover {
+
+            opacity: 0.88;
+
+            transform:
+                translateY(-1px);
+
+        }
+
+        .btn-secondary {
+
+            background: #374151;
+
+            color: white;
+
+        }
+
+        main {
+
+            max-width: 1200px;
+
+            margin: 30px auto;
+
+            padding: 0 20px;
+
+        }
+
+        .profile-header {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 2px 10px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.07
+                );
+
+        }
+
+        .identity {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+        }
+
+        .avatar {
+
+            width: 80px;
+
+            height: 80px;
+
+            border-radius: 50%;
+
+            background: #2563eb;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+        }
+
+        .identity h2 {
+
+            font-size: 28px;
+
+            margin-bottom: 8px;
+
+        }
+
+        .identity p {
+
+            color: #6b7280;
+
+            margin-bottom: 5px;
+
+        }
+
+        .cv-name {
+
+            background: #f3f4f6;
+
+            padding: 10px 14px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+        }
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap: 25px;
+
+        }
+
+        .card {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 2px 10px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.07
+                );
+
+        }
+
+        .card.full {
+
+            grid-column: 1 / -1;
+
+        }
+
+        .card h3 {
+
+            font-size: 19px;
+
+            margin-bottom: 20px;
+
+            padding-bottom: 12px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+        }
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap: 18px;
+
+        }
+
+        .info-item {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+
+        }
+
+        .info-label {
+
+            font-size: 12px;
+
+            color: #6b7280;
+
+            text-transform: uppercase;
+
+            font-weight: bold;
+
+        }
+
+        .info-value {
+
+            font-size: 15px;
+
+        }
+
+        .formation {
+
+            padding: 18px;
+
+            border-left:
+                4px solid #2563eb;
+
+            background: #f8fafc;
+
+            border-radius: 6px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .formation:last-child {
+
+            margin-bottom: 0;
+
+        }
+
+        .formation-title {
+
+            font-weight: bold;
+
+            font-size: 16px;
+
+            margin-bottom: 7px;
+
+        }
+
+        .formation-school {
+
+            color: #4b5563;
+
+            margin-bottom: 6px;
+
+        }
+
+        .formation-date {
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+        }
+
+        .experience {
+
+            padding: 20px;
+
+            border-left:
+                4px solid #198754;
+
+            background: #f8fafc;
+
+            border-radius: 6px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .experience:last-child {
+
+            margin-bottom: 0;
+
+        }
+
+        .experience-title {
+
+            font-weight: bold;
+
+            font-size: 17px;
+
+            margin-bottom: 6px;
+
+        }
+
+        .experience-company {
+
+            color: #2563eb;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+
+        }
+
+        .experience-date {
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+            margin-bottom: 12px;
+
+        }
+
+        .experience-description {
+
+            line-height: 1.6;
+
+            color: #4b5563;
+
+        }
+
+        .skills {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+        }
+
+        .skill {
+
+            background: #e0ecff;
+
+            color: #1d4ed8;
+
+            padding: 8px 14px;
+
+            border-radius: 20px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+        .languages {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap: 12px;
+
+        }
+
+        .language {
+
+            background: #f8fafc;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid #e5e7eb;
+
+        }
+
+        .language-name {
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+        .language-level {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+        }
+
+        .loading {
+
+            text-align: center;
+
+            padding: 60px;
+
+            color: #6b7280;
+
+            font-size: 16px;
+
+        }
+
+        .error {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+        }
+
+        @media (
+            max-width: 800px
+        ) {
+
+            header {
+
+                padding:
+                    18px 20px;
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+                gap: 15px;
+
+            }
+
+            .profile-header {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+                gap: 20px;
+
+            }
+
+            .grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .card.full {
+
+                grid-column: auto;
+
+            }
+
+            .info-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .languages {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        CV AI
+    </h1>
+
+    <div class="header-actions">
+
+        <button
+            class="btn btn-secondary"
+            onclick="retourClassement()"
+        >
+            ← Retour au classement
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <div id="contenu">
+
+        <div class="loading">
+
+            Chargement du profil candidat...
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+
+const candidatId =
+    new URLSearchParams(
+        window.location.search
+    ).get("id");
+
+
+
+function retourClassement() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const offreId =
+        params.get("offre_id");
+
+    if (offreId) {
+
+        window.location.href =
+            "/classement/" + offreId;
+
+    } else {
+
+        window.history.back();
+
+    }
+}
+
+
+
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+function obtenirInitiales(
+    nom
+) {
+
+    if (!nom) {
+
+        return "?";
+
+    }
+
+    const morceaux =
+        nom
+            .trim()
+            .split(/\s+/);
+
+    if (
+        morceaux.length === 1
+    ) {
+
+        return morceaux[0]
+            .substring(
+                0,
+                2
+            )
+            .toUpperCase();
+
+    }
+
+    return (
+        morceaux[0][0] +
+        morceaux[
+            morceaux.length - 1
+        ][0]
+    ).toUpperCase();
+
+}
+
+
+function afficherListe(
+    liste
+) {
+
+    if (
+        !liste ||
+        liste.length === 0
+    ) {
+
+        return `
+            <p style="color:#6b7280;">
+                Aucune information disponible.
+            </p>
+        `;
+
+    }
+
+}
+
+
+async function chargerProfil() {
+
+    const contenu =
+        document.getElementById(
+            "contenu"
+        );
+
+
+    if (!candidatId) {
+
+        contenu.innerHTML = `
+
+            <div class="error">
+
+                Identifiant du candidat
+                introuvable.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/candidats/${candidatId}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.success
+        ) {
+
+            contenu.innerHTML = `
+
+                <div class="error">
+
+                    ${
+                        escapeHtml(
+                            data.message ||
+                            "Candidat introuvable."
+                        )
+                    }
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        const candidat =
+            data.candidat;
+
+
+        let formationsHtml = "";
+
+
+        if (
+            candidat.formations &&
+            candidat.formations.length > 0
+        ) {
+
+            candidat.formations.forEach(
+                function(formation) {
+
+                    const debut =
+                        formation.annee_debut ||
+                        "";
+
+                    const fin =
+                        formation.annee_fin ||
+                        "";
+
+                    let periode =
+                        "";
+
+                    if (
+                        debut &&
+                        fin
+                    ) {
+
+                        periode =
+                            `${debut} - ${fin}`;
+
+                    } else if (fin) {
+
+                        periode =
+                            fin;
+
+                    } else if (debut) {
+
+                        periode =
+                            debut;
+
+                    }
+
+                    formationsHtml += `
+
+                        <div class="formation">
+
+                            <div class="formation-title">
+
+                                ${
+                                    escapeHtml(
+                                        formation.diplome
+                                    )
+                                }
+
+                            </div>
+
+                            <div class="formation-school">
+
+                                ${
+                                    escapeHtml(
+                                        formation.etablissement
+                                    )
+                                }
+
+                            </div>
+
+                            ${
+                                periode
+                                ? `
+                                    <div class="formation-date">
+                                        ${escapeHtml(periode)}
+                                    </div>
+                                `
+                                : ""
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+        } else {
+
+            formationsHtml = `
+
+                <p style="color:#6b7280;">
+                    Aucune formation enregistrée.
+                </p>
+
+            `;
+
+        }
+
+
+        let experiencesHtml = "";
+
+
+        if (
+            candidat.experiences &&
+            candidat.experiences.length > 0
+        ) {
+
+            candidat.experiences.forEach(
+                function(experience) {
+
+                    let periode = "";
+
+                    if (
+                        experience.date_debut &&
+                        experience.date_fin
+                    ) {
+
+                        periode =
+                            `${experience.date_debut} - ${experience.date_fin}`;
+
+                    } else if (
+                        experience.date_debut
+                    ) {
+
+                        periode =
+                            experience.date_debut;
+
+                    }
+
+
+                    experiencesHtml += `
+
+                        <div class="experience">
+
+                            <div class="experience-title">
+
+                                ${
+                                    escapeHtml(
+                                        experience.poste
+                                    )
+                                }
+
+                            </div>
+
+                            <div class="experience-company">
+
+                                ${
+                                    escapeHtml(
+                                        experience.entreprise
+                                    )
+                                }
+
+                            </div>
+
+                            ${
+                                periode
+                                ? `
+                                    <div class="experience-date">
+                                        ${escapeHtml(periode)}
+                                    </div>
+                                `
+                                : ""
+                            }
+
+                            <div class="experience-description">
+
+                                ${
+                                    escapeHtml(
+                                        experience.description
+                                    )
+                                }
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+        } else {
+
+            experiencesHtml = `
+
+                <p style="color:#6b7280;">
+                    Aucune expérience enregistrée.
+                </p>
+
+            `;
+
+        }
+
+
+        let skillsHtml = "";
+
+
+        if (
+            candidat.competences &&
+            candidat.competences.length > 0
+        ) {
+
+            candidat.competences.forEach(
+                function(competence) {
+
+                    skillsHtml += `
+
+                        <span class="skill">
+
+                            ${
+                                escapeHtml(
+                                    competence
+                                )
+                            }
+
+                        </span>
+
+                    `;
+
+                }
+            );
+
+        } else {
+
+            skillsHtml = `
+
+                <p style="color:#6b7280;">
+                    Aucune compétence enregistrée.
+                </p>
+
+            `;
+
+        }
+
+
+        let languagesHtml = "";
+
+
+        if (
+            candidat.langues &&
+            candidat.langues.length > 0
+        ) {
+
+            candidat.langues.forEach(
+                function(langue) {
+
+                    languagesHtml += `
+
+                        <div class="language">
+
+                            <div class="language-name">
+
+                                ${
+                                    escapeHtml(
+                                        langue.langue
+                                    )
+                                }
+
+                            </div>
+
+                            <div class="language-level">
+
+                                ${
+                                    escapeHtml(
+                                        langue.niveau
+                                    )
+                                }
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+        } else {
+
+            languagesHtml = `
+
+                <p style="color:#6b7280;">
+                    Aucune langue enregistrée.
+                </p>
+
+            `;
+
+        }
+
+
+        contenu.innerHTML = `
+
+            <section class="profile-header">
+
+                <div class="identity">
+
+                    <div class="avatar">
+
+                        ${
+                            obtenirInitiales(
+                                candidat.nom
+                            )
+                        }
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+
+                            ${
+                                escapeHtml(
+                                    candidat.nom
+                                )
+                            }
+
+                        </h2>
+
+                        <p>
+
+                            ${
+                                escapeHtml(
+                                    candidat.email
+                                )
+                            }
+
+                        </p>
+
+                        <p>
+
+                            ${
+                                escapeHtml(
+                                    candidat.telephone
+                                )
+                            }
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cv-name">
+
+                    <strong>
+                        CV :
+                    </strong>
+
+                    ${
+                        escapeHtml(
+                            candidat.cv_filename
+                        )
+                    }
+
+                </div>
+
+            </section>
+
+
+            <div class="grid">
+
+
+                <section class="card">
+
+                    <h3>
+                        Informations personnelles
+                    </h3>
+
+                    <div class="info-grid">
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Nom complet
+                            </span>
+
+                            <span class="info-value">
+
+                                ${
+                                    escapeHtml(
+                                        candidat.nom
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Email
+                            </span>
+
+                            <span class="info-value">
+
+                                ${
+                                    escapeHtml(
+                                        candidat.email
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Téléphone
+                            </span>
+
+                            <span class="info-value">
+
+                                ${
+                                    escapeHtml(
+                                        candidat.telephone
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Adresse
+                            </span>
+
+                            <span class="info-value">
+
+                                ${
+                                    escapeHtml(
+                                        candidat.adresse
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="card">
+
+                    <h3>
+                        Compétences
+                    </h3>
+
+                    <div class="skills">
+
+                        ${skillsHtml}
+
+                    </div>
+
+                </section>
+
+
+                <section class="card">
+
+                    <h3>
+                        Formations
+                    </h3>
+
+                    ${formationsHtml}
+
+                </section>
+
+
+                <section class="card">
+
+                    <h3>
+                        Langues
+                    </h3>
+
+                    <div class="languages">
+
+                        ${languagesHtml}
+
+                    </div>
+
+                </section>
+
+
+                <section class="card full">
+
+                    <h3>
+                        Expériences professionnelles
+                    </h3>
+
+                    ${experiencesHtml}
+
+                </section>
+
+
+            </div>
+
+        `;
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        contenu.innerHTML = `
+
+            <div class="error">
+
+                Une erreur est survenue
+                lors du chargement du profil.
+
+                <br><br>
+
+                ${
+                    escapeHtml(
+                        error.message
+                    )
+                }
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+chargerProfil();
+
+</script>
+
+
+</body>
+
+</html>
+

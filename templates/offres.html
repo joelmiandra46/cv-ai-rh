@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://unpkg.com/lucide@latest"></script>
+<title>Gestion des offres - CV AI</title>
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #dbeafe;
+        --primary-dark: #1e40af;
+        --bg: #f8fafc;
+        --card-bg: #fff;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --text-inverse: #ffffff;
+        --border: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --success: #22c55e;
+        --success-light: #dcfce7;
+        --success-dark: #16a34a;
+        --error: #ef4444;
+        --error-light: #fee2e2;
+        --error-dark: #dc2626;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --warning-dark: #92400e;
+        --header-bg: #1e293b;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --radius-full: 9999px;
+        --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-hover: 0 2px 8px rgba(0,0,0,0.12);
+        --shadow-primary: 0 2px 8px rgba(37,99,235,0.25);
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --spacing-xl: 20px;
+        --spacing-2xl: 24px;
+        --spacing-3xl: 28px;
+        --text-xs: 12px;
+        --text-sm: 13px;
+        --text-base: 14px;
+        --text-lg: 15px;
+        --text-xl: 16px;
+        --text-2xl: 18px;
+        --text-3xl: 20px;
+        --text-4xl: 22px;
+        --font-normal: 400;
+        --font-medium: 500;
+        --font-semibold: 600;
+        --font-bold: 700;
+        --leading-tight: 1.25;
+        --leading-normal: 1.45;
+        --leading-relaxed: 1.55;
+        --transition: 0.2s ease;
+        --header-height: 70px;
+        --icon-size: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100dvh; margin: 0; padding: 0; }
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-size: var(--text-base);
+        line-height: var(--leading-normal);
+        color: var(--text);
+        background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .header {
+        background: var(--header-bg);
+        color: var(--text-inverse);
+        min-height: var(--header-height);
+        padding: var(--spacing-md) var(--spacing-xl);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--spacing-md);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        flex-wrap: wrap;
+    }
+    .header h1 {
+        margin: 0;
+        font-size: var(--text-4xl);
+        font-weight: var(--font-bold);
+        line-height: var(--leading-tight);
+        letter-spacing: -0.025em;
+        white-space: nowrap;
+    }
+    .header p { display: none; }
+    .header-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        flex-wrap: wrap;
+    }
+    .nav-link {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: var(--text-inverse);
+        padding: 10px 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 12px;
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+    }
+    .nav-link:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.24);
+        transform: translateY(-1px);
+    }
+    .container {
+        flex: 1;
+        overflow-y: auto;
+        max-width: 1250px;
+        width: 100%;
+        margin: 0 auto;
+        padding: var(--spacing-xl);
+        padding-top: 18px;
+    }
+    .page-title {
+        margin-bottom: var(--spacing-xl);
+        margin-top: 0;
+    }
+    .page-title h2 {
+        font-size: clamp(1.8rem, 2vw, 2.2rem);
+        font-weight: var(--font-bold);
+        color: var(--text);
+        margin-bottom: var(--spacing-sm);
+    }
+    .page-title p {
+        color: var(--text-secondary);
+        font-size: var(--text-lg);
+        margin: 0;
+    }
+    .message {
+        display: none;
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--radius);
+        margin-bottom: var(--spacing-lg);
+        font-size: var(--text-sm);
+        font-weight: var(--font-medium);
+        border: 1px solid transparent;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+    .message.success {
+        display: flex;
+        background: var(--success-light);
+        color: var(--success-dark);
+        border-color: var(--success);
+    }
+    .message.error {
+        display: flex;
+        background: var(--error-light);
+        color: var(--error-dark);
+        border-color: var(--error);
+    }
+    /* Boutons */
+    button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: var(--text-sm);
+        font-weight: 700;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        line-height: 1;
+    }
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    button:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+    button i {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2.1;
+        flex-shrink: 0;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: var(--text-inverse);
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+    }
+    .btn-primary:hover:not(:disabled) {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+        transform: translateY(-1px);
+    }
+    .btn-secondary {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        border-color: #c7d2fe;
+        box-shadow: 0 6px 16px rgba(148, 163, 184, 0.12);
+        transform: translateY(-1px);
+    }
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: var(--text-inverse);
+    }
+    .btn-danger:hover:not(:disabled) {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+    }
+    .btn-icon {
+        background: transparent;
+        color: var(--text-secondary);
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+    }
+    .btn-icon:hover:not(:disabled) {
+        background: var(--bg);
+        color: var(--text);
+    }
+    .card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        border-radius: 18px;
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+    .card-title {
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
+        color: var(--text);
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 1px solid var(--border);
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+    label {
+        font-weight: var(--font-medium);
+        margin-bottom: var(--spacing-sm);
+        font-size: var(--text-sm);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+    .required {
+        color: var(--error);
+        font-size: var(--text-xs);
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: var(--spacing-md);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: var(--text-base);
+        font-family: inherit;
+        outline: none;
+        background: var(--card-bg);
+        color: var(--text);
+        transition: all var(--transition);
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+        line-height: var(--leading-relaxed);
+    }
+    .form-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+        flex-wrap: wrap;
+    }
+    .search-container {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .search-container input {
+        flex: 1;
+        min-width: 200px;
+    }
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        max-height: 50vh;
+        overflow-y: auto;
+        background: #fff;
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+    }
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: var(--text-sm);
+        table-layout: auto;
+    }
+    th, td {
+        padding: 14px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+    th {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        color: var(--text-secondary);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    td {
+        font-size: var(--text-base);
+        color: var(--text);
+    }
+    tbody tr:nth-child(even) {
+        background: rgba(248, 250, 252, 0.6);
+    }
+    tbody tr:hover {
+        background: linear-gradient(90deg, rgba(219, 234, 254, 0.28) 0%, rgba(248, 250, 252, 0.8) 100%);
+    }
+    tr:last-child td { border-bottom: none; }
+    .description-cell {
+        max-width: 350px;
+        white-space: pre-wrap;
+        line-height: var(--leading-relaxed);
+        color: var(--text-secondary);
+    }
+    .status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.9);
+        box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.04);
+        vertical-align: middle;
+        padding: 0;
+        overflow: hidden;
+        background: #cbd5e1;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        box-shadow: 0 4px 10px rgba(34, 197, 94, 0.25);
+    }
+
+    .status-closed {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+    }
+
+    .status-draft {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+    }
+    .empty-message {
+        text-align: center;
+        padding: var(--spacing-3xl);
+        color: var(--text-muted);
+    }
+    .btn-group {
+        display: flex;
+        gap: var(--spacing-sm);
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        min-width: 240px;
+    }
+    .btn-group .btn-secondary {
+        flex: 1 1 0;
+        min-width: 110px;
+        padding: 9px 12px;
+        font-size: 12px;
+        justify-content: center;
+        white-space: nowrap;
+    }
+    .btn-group .btn-secondary i {
+        width: 14px;
+        height: 14px;
+        stroke-width: 2.2;
+    }
+    /* Loading animation */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .spin {
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+    }
+    /* Responsive */
+    @media (max-width: 800px) {
+        .header {
+            height: 46px;
+            padding: 0 var(--spacing-md);
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            align-items: flex-start;
+        }
+        .header-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+        .container { padding: var(--spacing-md); }
+        .card { padding: var(--spacing-lg); margin-bottom: var(--spacing-md); }
+        .page-title h2 { font-size: var(--text-2xl); }
+        .form-grid { grid-template-columns: 1fr; }
+        .form-group.full { grid-column: auto; }
+        .form-actions { flex-direction: column; }
+        .form-actions .btn { width: 100%; justify-content: center; }
+        .search-container { flex-direction: column; align-items: stretch; }
+        .search-container input { width: 100%; }
+        .table-container { max-height: 45vh; }
+        .nav-link { font-size: var(--text-xs); padding: var(--spacing-xs) var(--spacing-sm); }
+    }
+    @media (max-width: 480px) {
+        .header h1 { font-size: var(--text-lg); }
+        .page-title h2 { font-size: var(--text-xl); }
+        .card-title { font-size: var(--text-lg); }
+        th, td { padding: var(--spacing-sm); font-size: var(--text-xs); }
+        .btn-group { flex-direction: column; justify-content: stretch; }
+        .btn-group .btn { width: 100%; margin-bottom: var(--spacing-xs); }
+        .header-actions { flex-wrap: wrap; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>ANALYSE CV</h1>
+<div class="header-actions">
+<button class="nav-link" onclick="retourCandidats()">
+    <i data-lucide="arrow-left"></i>
+    <span>Candidats</span>
+</button>
+<button class="nav-link" onclick="window.location.href='/offres-page'">
+    <i data-lucide="briefcase-business"></i>
+    <span>Offres d'emploi</span>
+</button>
+</div>
+</div>
+
+<div class="container">
+
+<div class="page-title">
+<h2>Gestion des offres d'emploi</h2>
+<p>Créez et gérez les offres utilisées pour l'analyse et la sélection des CV.</p>
+</div>
+
+<div id="message" class="message"></div>
+
+<section class="card">
+<div class="card-title">Créer une nouvelle offre</div>
+<form id="offreForm">
+<div class="form-grid">
+<div class="form-group">
+<label for="titre">Intitulé du poste <span class="required">*</span></label>
+<input type="text" id="titre" placeholder="Ex : Développeur Web" required>
+</div>
+<div class="form-group">
+<label for="entreprise">Entreprise</label>
+<input type="text" id="entreprise" placeholder="Ex : STALLION ENTERPRISE">
+</div>
+<div class="form-group full">
+<label for="description">Description du poste</label>
+<textarea id="description" placeholder="Présentez le poste et son contexte..."></textarea>
+</div>
+<div class="form-group full">
+<label for="missions">Missions principales</label>
+<textarea id="missions" placeholder="Décrivez les principales missions du candidat..."></textarea>
+</div>
+<div class="form-group">
+<label for="competences_obligatoires">Compétences obligatoires</label>
+<textarea id="competences_obligatoires" placeholder="Ex : Python, SQL, FastAPI..."></textarea>
+</div>
+<div class="form-group">
+<label for="competences_souhaitees">Compétences souhaitées</label>
+<textarea id="competences_souhaitees" placeholder="Ex : Docker, Git, Linux..."></textarea>
+</div>
+<div class="form-group">
+<label for="niveau_etude">Niveau d'étude</label>
+<select id="niveau_etude">
+<option value="">Sélectionnez</option>
+<option value="Bac">Bac</option>
+<option value="Bac+2">Bac+2</option>
+<option value="Bac+3">Bac+3 / Licence</option>
+<option value="Bac+4">Bac+4</option>
+<option value="Bac+5">Bac+5 / Master</option>
+<option value="Doctorat">Doctorat</option>
+</select>
+</div>
+<div class="form-group">
+<label for="experience">Expérience demandée</label>
+<input type="text" id="experience" placeholder="Ex : 2 ans">
+</div>
+<div class="form-group">
+<label for="type_contrat">Type de contrat</label>
+<select id="type_contrat">
+<option value="">Sélectionnez</option>
+<option value="CDI">CDI</option>
+<option value="CDD">CDD</option>
+<option value="Stage">Stage</option>
+<option value="Alternance">Alternance</option>
+<option value="Freelance">Freelance</option>
+</select>
+</div>
+<div class="form-group">
+<label for="localisation">Localisation</label>
+<input type="text" id="localisation" placeholder="Ex : Antananarivo">
+</div>
+<div class="form-group">
+<label for="salaire">Salaire</label>
+<input type="text" id="salaire" placeholder="Ex : 1 500 000 Ar">
+</div>
+<div class="form-group">
+<label for="langues">Langues demandées</label>
+<input type="text" id="langues" placeholder="Ex : Français, Anglais">
+</div>
+<div class="form-group">
+<label for="date_limite">Date limite de candidature</label>
+<input type="date" id="date_limite">
+</div>
+<div class="form-group">
+<label for="statut">Statut</label>
+<select id="statut">
+<option value="active">Active</option>
+<option value="draft">Brouillon</option>
+<option value="closed">Clôturée</option>
+</select>
+</div>
+</div>
+<div class="form-actions">
+<button type="submit" class="btn-primary">
+    <i data-lucide="plus"></i>
+    <span>Enregistrer l'offre</span>
+</button>
+<button type="button" class="btn-secondary" onclick="reinitialiserFormulaire()">
+    <i data-lucide="rotate-ccw"></i>
+    <span>Réinitialiser</span>
+</button>
+</div>
+</form>
+</section>
+
+<section class="card">
+<div class="card-title">Offres enregistrées</div>
+<div class="search-container">
+<input type="text" id="rechercheOffre" placeholder="Rechercher par titre, entreprise ou compétence..." oninput="rechercherOffres()">
+<button class="btn-secondary" onclick="chargerOffres()">
+    <i data-lucide="rotate-cw"></i>
+    <span>Actualiser</span>
+</button>
+</div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Poste</th>
+<th>Entreprise</th>
+<th>Type</th>
+<th>Localisation</th>
+<th>Niveau</th>
+<th>Statut</th>
+<th>Date de création</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="offresTableBody">
+<tr><td colspan="9" class="empty-message"><span class="spin">&#128248;</span> Chargement des offres...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</div>
+
+<script>
+let offres = [];
+
+function retourCandidats() {
+    window.location.href = "/";
+}
+
+function voirDetailOffre(offreId) {
+    window.location.href = "/offres-detail?id=" + offreId;
+}
+
+function voirClassement(offreId) {
+    window.location.href = "/classement/" + offreId;
+}
+
+function afficherMessage(message, type) {
+    const element = document.getElementById("message");
+    element.innerHTML = (type === "success" ? '<span>&#10004;</span> ' : '<span>&#9888;</span> ') + message;
+    element.className = "message " + type;
+    setTimeout(function() { element.className = "message"; }, 4000);
+}
+
+function reinitialiserFormulaire() {
+    document.getElementById("offreForm").reset();
+}
+
+async function chargerOffres() {
+    try {
+        const response = await fetch("/offres");
+        const data = await response.json();
+        if (!data.success) {
+            afficherMessage("Impossible de charger les offres.", "error");
+            return;
+        }
+        offres = data.offres || [];
+        afficherOffres(offres);
+    } catch (error) {
+        console.error(error);
+        afficherMessage("Erreur lors du chargement des offres.", "error");
+    }
+}
+
+function obtenirStatutIcon(statut) {
+    if (statut === "closed") return "&#10060;";
+    if (statut === "draft") return "&#128196;";
+    return "&#10004;";
+}
+
+function obtenirStatutTexte(statut) {
+    if (statut === "closed") return "Clôturée";
+    if (statut === "draft") return "Brouillon";
+    return "Active";
+}
+
+function obtenirStatutClass(statut) {
+    if (statut === "closed") return "status-closed";
+    if (statut === "draft") return "status-draft";
+    return "status-active";
+}
+
+function afficherOffres(liste) {
+    const tbody = document.getElementById("offresTableBody");
+    tbody.innerHTML = "";
+    if (!liste || liste.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-message"><span><i data-lucide="briefcase-business"></i></span> Aucune offre enregistrée.</td></tr>';
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+        return;
+    }
+    liste.forEach(function(offre) {
+        const tr = document.createElement("tr");
+        const statutClass = obtenirStatutClass(offre.statut);
+        const statutTexte = obtenirStatutTexte(offre.statut);
+        const statutIcon = obtenirStatutIcon(offre.statut);
+        tr.innerHTML = `
+            <td>${escapeHtml(offre.id)}</td>
+            <td><strong>${escapeHtml(offre.titre)}</strong></td>
+            <td>${escapeHtml(offre.entreprise)}</td>
+            <td>${escapeHtml(offre.type_contrat)}</td>
+            <td>${escapeHtml(offre.localisation)}</td>
+            <td>${escapeHtml(offre.niveau_etude)}</td>
+            <td><span class="status ${statutClass}">${statutIcon} ${statutTexte}</span></td>
+            <td>${formaterDate(offre.date_creation)}</td>
+            <td class="btn-group">
+                <button class="btn-secondary" onclick="voirDetailOffre(${offre.id})">
+                    <i data-lucide="eye"></i>
+                    <span>Voir le détail</span>
+                </button>
+                <button class="btn-secondary" onclick="voirClassement(${offre.id})">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Classement IA</span>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+function rechercherOffres() {
+    const recherche = document.getElementById("rechercheOffre").value.toLowerCase().trim();
+    if (recherche === "") { afficherOffres(offres); return; }
+    const resultat = offres.filter(function(offre) {
+        const texte = (String(offre.titre || "") + " " + String(offre.entreprise || "") + " " + String(offre.description || "") + " " + String(offre.competences_obligatoires || "") + " " + String(offre.competences_souhaitees || "")).toLowerCase();
+        return texte.includes(recherche);
+    });
+    afficherOffres(resultat);
+}
+
+async function enregistrerOffre() {
+    const titre = document.getElementById("titre").value.trim();
+    const entreprise = document.getElementById("entreprise").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const missions = document.getElementById("missions").value.trim();
+    const competencesObligatoires = document.getElementById("competences_obligatoires").value.trim();
+    const competencesSouhaitees = document.getElementById("competences_souhaitees").value.trim();
+    const niveauEtude = document.getElementById("niveau_etude").value;
+    const experience = document.getElementById("experience").value.trim();
+    const typeContrat = document.getElementById("type_contrat").value;
+    const localisation = document.getElementById("localisation").value.trim();
+    const salaire = document.getElementById("salaire").value.trim();
+    const langues = document.getElementById("langues").value.trim();
+    const dateLimite = document.getElementById("date_limite").value;
+    const statut = document.getElementById("statut").value;
+    if (titre === "") {
+        afficherMessage("Le titre du poste est obligatoire.", "error");
+        return;
+    }
+    const params = new URLSearchParams();
+    params.append("titre", titre);
+    params.append("entreprise", entreprise);
+    params.append("description", description);
+    params.append("missions", missions);
+    params.append("competences_obligatoires", competencesObligatoires);
+    params.append("competences_souhaitees", competencesSouhaitees);
+    params.append("niveau_etude", niveauEtude);
+    params.append("experience", experience);
+    params.append("type_contrat", typeContrat);
+    params.append("localisation", localisation);
+    params.append("salaire", salaire);
+    params.append("langues", langues);
+    params.append("date_limite", dateLimite);
+    params.append("statut", statut);
+    try {
+        const response = await fetch("/offres", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: params.toString()
+        });
+        const data = await response.json();
+        if (data.success) {
+            afficherMessage("Offre enregistrée avec succès.", "success");
+            reinitialiserFormulaire();
+            await chargerOffres();
+        } else {
+            afficherMessage(data.message || "Impossible d'enregistrer l'offre.", "error");
+        }
+    } catch (error) {
+        console.error(error);
+        afficherMessage("Erreur lors de l'enregistrement de l'offre.", "error");
+    }
+}
+
+function formaterDate(date) {
+    if (!date) return "";
+    const objetDate = new Date(date);
+    if (isNaN(objetDate.getTime())) return String(date);
+    return objetDate.toLocaleString("fr-FR");
+}
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+document.getElementById("offreForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    enregistrerOffre();
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+    chargerOffres();
+});
+</script>
+
+</body>
+</html>
